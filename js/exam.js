@@ -126,7 +126,7 @@
     draw(); window.scrollTo(0, 0); if (window.STUDY) STUDY.refreshBadge();
   }
   document.addEventListener('keydown', e => {
-    if (!S || S.done || document.querySelector('.st') || !$('.ex-q')) return; const q = S.qs[S.cur]; const k = e.key.toUpperCase(); const i = 'ABCDE'.indexOf(k);
+    if (!S || S.done || document.querySelector('.stdy') || !$('.ex-q')) return; const q = S.qs[S.cur]; const k = e.key.toUpperCase(); const i = 'ABCDE'.indexOf(k);
     if (i >= 0 && i < q.a.length) { choose(i); e.preventDefault(); }
     else if (e.key === 'ArrowRight') go(S.cur + 1); else if (e.key === 'ArrowLeft') go(S.cur - 1);
     else if (k === 'F') { q.flag = !q.flag; render(); }

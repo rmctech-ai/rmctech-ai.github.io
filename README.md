@@ -26,6 +26,15 @@ My home base for learning cloud engineering, on the way from AWS Cloud Practitio
 | [🚀 CI/CD Explorer](https://rmctech-ai.github.io/CICD-Explorer/) | GitHub Actions, OIDC, DevSecOps |
 | [🛡️ Cloud Security Explorer](https://rmctech-ai.github.io/CloudSecurity-Explorer/) | CloudTrail hunting, KMS, GuardDuty, incident response |
 
+## AWS City Map study kit
+
+| | |
+|---|---|
+| [🗺️ AWS City Map](https://rmctech-ai.github.io/aws-city-map/) | Clickable CLF-C02 mind map: AWS as a city |
+| [🏛️ Architecture Atlas](https://rmctech-ai.github.io/aws-city-map/atlas/) | 5 real-world designs, mock exams, Select TWO/THREE trainer |
+| [🛰️ Request Explorer](https://rmctech-ai.github.io/aws-city-map/explorer/) | Animated request flows through my portfolio projects |
+| [📘 Service Field Guide](https://rmctech-ai.github.io/aws-city-map/field-guide/) | 119 services, exam traps, Quiz me |
+
 ## Notes
 
 - Static site (HTML/CSS/vanilla JS), no build step, no tracking. Progress is stored only in your browser's localStorage.

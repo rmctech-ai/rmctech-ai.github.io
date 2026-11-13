@@ -34,6 +34,14 @@
   <h2>THE EXPLORER SERIES</h2>
   <div class="grid g4" id="courses"></div>
 
+  <h2>AWS CITY MAP STUDY KIT</h2>
+  <div class="grid g4">
+    <a class="card course" href="https://rmctech-ai.github.io/aws-city-map/"><div class="hd"><span class="em">🗺️</span><div><h3>AWS City Map</h3><div class="n">CLF-C02 MIND MAP</div></div></div><p class="mute" style="margin:0;font-size:12px">AWS as a city you rent: 8 districts, request flows, look-alike services, keyword finder and a 14-day plan.</p></a>
+    <a class="card course" href="https://rmctech-ai.github.io/aws-city-map/atlas/"><div class="hd"><span class="em">🏛️</span><div><h3>Architecture Atlas</h3><div class="n">5 DESIGNS · 375+ QUESTIONS</div></div></div><p class="mute" style="margin:0;font-size:12px">Real-world designs with clickable diagrams, decision records, timed mock exams and a Select TWO / THREE trainer.</p></a>
+    <a class="card course" href="https://rmctech-ai.github.io/aws-city-map/explorer/"><div class="hd"><span class="em">🛰️</span><div><h3>Request Explorer</h3><div class="n">8 PORTFOLIO PROJECTS</div></div></div><p class="mute" style="margin:0;font-size:12px">Watch every request move between services in my animated portfolio projects, step by step.</p></a>
+    <a class="card course" href="https://rmctech-ai.github.io/aws-city-map/field-guide/"><div class="hd"><span class="em">📘</span><div><h3>Service Field Guide</h3><div class="n">119 SERVICES · QUIZ</div></div></div><p class="mute" style="margin:0;font-size:12px">Every CLF-C02 service with hooks, analogies and connection maps, exam traps, and a Quiz me mode.</p><div class="meta"><span id="fgRev">0/119 reviewed</span><span>→</span></div></a>
+  </div>
+
   <h2>PRACTICE FOR THE EXAM</h2>
   <div class="grid g3">
     <a class="card course" href="exam.html"><div class="hd"><span class="em">📝</span><div><h3>CCP Exam Simulator</h3><div class="n">CLF-C02 · 4 DOMAINS</div></div></div><p class="mute" style="margin:0">65 questions in 90 minutes, weighted like the real exam, with flag-for-review, a domain breakdown and an explanation for every option. Quick and domain modes too.</p><div class="meta"><span id="exHist">No attempts yet</span><span>→</span></div></a>
@@ -71,6 +79,7 @@ HUB.header('home');
   if (dr.best) document.getElementById('drBest').textContent = `Best: ${dr.best} pts · ${dr.games || 0} game(s)`;
   const all = Object.keys(STUDY.load()).length, due = STUDY.due().length;
   document.getElementById('sDue').textContent = due; document.getElementById('revTxt').textContent = `${all} saved · ${due} due now`;
+  try { const fr = Object.keys(JSON.parse(localStorage.getItem('fg-reviewed-v1') || '{}')).length; document.getElementById('fgRev').textContent = fr + '/119 reviewed'; } catch (e) {}
   document.getElementById('revBtn').onclick = document.getElementById('revCard').onclick = () => STUDY.review(false);
 })();
 </script>

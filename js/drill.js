@@ -62,7 +62,7 @@
     $('#agBtn').onclick = () => start(G.c); $('#hmBtn').onclick = home; $('#rvBtn').onclick = () => STUDY.review(false);
   }
   document.addEventListener('keydown', e => {
-    if (!G || document.querySelector('.st')) return; const r = G.rounds[G.cur]; if (!r) return;
+    if (!G || document.querySelector('.stdy')) return; const r = G.rounds[G.cur]; if (!r) return;
     const i = '1234'.indexOf(e.key) >= 0 ? '1234'.indexOf(e.key) : 'ABCD'.indexOf(e.key.toUpperCase());
     if (r.pick === null && i >= 0 && $('.dr-scn')) { const b = app.querySelector(`.opt[data-o="${i}"]`); if (b) { b.click(); e.preventDefault(); } }
     else if (r.pick !== null && e.key === 'Enter') { const n = $('#nxBtn'); if (n) { e.preventDefault(); n.click(); } }
