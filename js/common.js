@@ -12,7 +12,8 @@ window.HUB = (function () {
     { key: 'wellarchitected-explorer-v1', repo: 'WellArchitected-Explorer', name: 'Well-Architected Explorer', em: '🏛️', n: 16, sub: '16 design principles, 6 pillars, review board' },
     { key: 'security-journey-v1', repo: 'aws-security-journey/course', name: 'Security Journey Explorer', em: '🧭', n: 15, sub: 'Attack · Defense · In my world, Python defense lab' },
     { key: 'n8n-explorer-v1', repo: 'N8N-Explorer', name: 'n8n Explorer', em: '🔁', n: 15, sub: 'Process mapping, core nodes, AI agents, RAG' },
-    { key: 'claudecode-explorer-v1', repo: 'ClaudeCode-Explorer', name: 'Claude Code Explorer', em: '🤖', n: 14, sub: 'Claude Code, MCP, Claude API, Bedrock' }
+    { key: 'claudecode-explorer-v1', repo: 'ClaudeCode-Explorer', name: 'Claude Code Explorer', em: '🤖', n: 14, sub: 'Claude Code, MCP, Claude API, Bedrock' },
+    { key: 'saa-explorer-v1', repo: 'SAA-Explorer', name: 'SAA Explorer', em: '🎓', n: 16, sub: 'SAA-C03 + roadmap to master Solutions Architect' }
   ];
   const BASE = 'https://rmctech-ai.github.io/';
   const EXAM_DATE = new Date('2026-12-15T09:00:00+08:00');

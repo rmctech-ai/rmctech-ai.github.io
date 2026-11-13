@@ -8,10 +8,10 @@ My home base for learning cloud engineering, on the way from AWS Cloud Practitio
 
 | | |
 |---|---|
-| 🏠 **Home** | All 12 Explorer courses with live progress (read from your browser), CCP countdown, stats and roadmap |
+| 🏠 **Home** | All 13 Explorer courses with live progress (read from your browser), CCP countdown, stats and roadmap |
 | 📝 **CCP Exam Simulator** | 156 original CLF-C02-style questions across the 4 domains. Full exam (65 Q / 90 min, domain-weighted), half exam, quick 10 and domain practice. Flag for review, timer, domain breakdown, and an explanation for **every** option. Options are shuffled each attempt and least-seen questions come first. |
 | ⚡ **"Which service?" Drill** | 99 real-world scenarios, 108 AWS services, 15 seconds per round, same-category distractors, streak bonuses and a searchable service cheat sheet |
-| 📚 **My Mistakes** | A spaced-repetition deck shared by the hub **and all 12 courses**: every missed question comes back after 1 day and 3 days until it's answered right 3 times |
+| 📚 **My Mistakes** | A spaced-repetition deck shared by the hub **and all 13 courses**: every missed question comes back after 1 day and 3 days until it's answered right 3 times |
 
 ## The Explorer series
 
@@ -29,6 +29,7 @@ My home base for learning cloud engineering, on the way from AWS Cloud Practitio
 | [🧭 Security Journey Explorer](https://rmctech-ai.github.io/aws-security-journey/course/) | My post-CCP security roadmap: foundations, AWS security, web/API/LLM attacks, GRC |
 | [🔁 n8n Explorer](https://rmctech-ai.github.io/N8N-Explorer/) | Process mapping, core nodes, error handling, AI agents and RAG with a workflow simulator |
 | [🤖 Claude Code Explorer](https://rmctech-ai.github.io/ClaudeCode-Explorer/) | Claude Code, MCP, the Claude API and Claude on Amazon Bedrock (Claude Academy path) |
+| [🎓 SAA Explorer](https://rmctech-ai.github.io/SAA-Explorer/) | SAA-C03 across all four domains, the roadmap to master Solutions Architect, and an Architect Lab |
 
 ## AWS City Map study kit
 
