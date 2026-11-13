@@ -24,7 +24,7 @@ window.HUB = (function () {
     document.body.prepend(h);
     h.querySelector('#themeBtn').onclick = () => { const t = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = t; try { localStorage.setItem('rmc-theme', t); } catch (e) {} };
     const f = document.createElement('footer'); f.className = 'wrap'; f.style.paddingTop = 0;
-    f.innerHTML = `<div class="foot"><span>Built by <a href="https://github.com/rmctech-ai">Raul (@rmctech-ai)</a> · Course layout inspired by Protocol Explorer</span><span>Practice questions are original study material, not real exam questions. Always confirm details in the AWS docs.</span></div>`;
+    f.innerHTML = `<div class="foot"><span>Built by <a href="https://github.com/rmctech-ai">Raul (@rmctech-ai)</a> · Original concept &amp; design by Raul · Only the Explorer course format is inspired by <a href="https://protocol-explorer-alpha.vercel.app/">Protocol Explorer</a></span><span>Practice questions are original study material, not real exam questions. Always confirm details in the AWS docs.</span></div>`;
     document.body.append(f);
   }
   let tt; function toast(t) { let el = document.querySelector('.toast'); if (!el) { el = document.createElement('div'); el.className = 'toast'; document.body.append(el); } el.textContent = t; el.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => el.classList.remove('show'), 2200); }

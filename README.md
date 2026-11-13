@@ -39,7 +39,7 @@ My home base for learning cloud engineering, on the way from AWS Cloud Practitio
 
 - Static site (HTML/CSS/vanilla JS), no build step, no tracking. Progress is stored only in your browser's localStorage.
 - The practice questions are original study material written to match the published CLF-C02 exam guide domains. They are **not** real exam questions. Always confirm details in the AWS documentation.
-- Course layout framework inspired by [Protocol Explorer](https://protocol-explorer-alpha.vercel.app/).
+- Original concept and design by Raul (rmctech-ai). Only the Explorer course format is inspired by [Protocol Explorer](https://protocol-explorer-alpha.vercel.app/) by Dilum Sanjaya; the hub, CCP simulator, service drill, review deck and the AWS City Map study kit are my own.
 
 ## License
 
