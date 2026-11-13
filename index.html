@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cloud Learning Hub · Raul (rmctech-ai)</title>
+<meta name="description" content="Raul's cloud engineering learning hub: 8 interactive Explorer courses (Linux, Python, IAM, VPC, IaC, Serverless, CI/CD, Cloud Security), a CCP exam simulator and a service drill.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/hub.css">
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <div class="card">
+      <p class="kicker">CLOUD ENGINEER IN TRAINING → CLOUD SECURITY</p>
+      <h1>Hi, I'm Raul. This is my cloud learning lab.</h1>
+      <p class="mute">Eight interactive courses I study with every week, each with animated diagrams, analogies, memory hooks, quizzes and hands-on labs that run in the browser. Plus a CCP exam simulator, a service drill and a spaced-repetition review deck that collects every question I miss.</p>
+      <div class="btnrow"><a class="btn" href="exam.html">START A CCP PRACTICE EXAM</a><a class="btn gh" href="drill.html">"WHICH SERVICE?" DRILL</a><button class="btn gh" id="revBtn">REVIEW MY MISTAKES</button></div>
+    </div>
+    <div class="card">
+      <p class="kicker">AWS CLOUD PRACTITIONER (CLF-C02)</p>
+      <div class="count" id="cd">–</div><div class="mute" id="cdTxt">days to exam day</div>
+      <div class="stat" style="margin-top:14px">
+        <div><b id="sLessons">0</b><span>LESSONS DONE</span></div>
+        <div><b id="sXp">0</b><span>TOTAL XP</span></div>
+        <div><b id="sExam">–</b><span>BEST PRACTICE EXAM</span></div>
+        <div><b id="sDue">0</b><span>MISTAKES DUE</span></div>
+      </div>
+    </div>
+  </section>
+
+  <h2>THE EXPLORER SERIES</h2>
+  <div class="grid g4" id="courses"></div>
+
+  <h2>PRACTICE FOR THE EXAM</h2>
+  <div class="grid g3">
+    <a class="card course" href="exam.html"><div class="hd"><span class="em">📝</span><div><h3>CCP Exam Simulator</h3><div class="n">CLF-C02 · 4 DOMAINS</div></div></div><p class="mute" style="margin:0">65 questions in 90 minutes, weighted like the real exam, with flag-for-review, a domain breakdown and an explanation for every option. Quick and domain modes too.</p><div class="meta"><span id="exHist">No attempts yet</span><span>→</span></div></a>
+    <a class="card course" href="drill.html"><div class="hd"><span class="em">⚡</span><div><h3>"Which service?" Drill</h3><div class="n">99 SCENARIOS · 15 S EACH</div></div></div><p class="mute" style="margin:0">A use case appears; pick the AWS service before the timer runs out. Builds the instant recall the CCP rewards.</p><div class="meta"><span id="drBest">No best score yet</span><span>→</span></div></a>
+    <div class="card course" id="revCard" style="cursor:pointer"><div class="hd"><span class="em">📚</span><div><h3>My Mistakes</h3><div class="n">SPACED REPETITION</div></div></div><p class="mute" style="margin:0">Every question you miss in any course quiz or the simulator. Due questions come back after 1 day, then 3 days, until you've answered them right 3 times.</p><div class="meta"><span id="revTxt">0 saved</span><span>→</span></div></div>
+  </div>
+
+  <h2>MY ROADMAP</h2>
+  <div class="grid g2">
+    <div class="card"><p class="kicker">STUDY ORDER</p><div class="path" id="path"></div></div>
+    <div class="card"><p class="kicker">CERTIFICATION PATH</p><div class="path"><span class="now">CCP · CLF-C02</span><i>→</i><span>Solutions Architect Associate · SAA-C03</span><i>→</i><span>Security Specialty · SCS-C02</span></div>
+      <p class="mute" style="margin:10px 0 0;font-size:12px">Target role: Cloud Engineer, then Cloud Security Engineer / Architect.</p></div>
+  </div>
+</main>
+<script src="js/common.js"></script>
+<script src="js/study.js"></script>
+<script>
+HUB.header('home');
+(function () {
+  const C = HUB.COURSES; let done = 0, xp = 0;
+  document.getElementById('courses').innerHTML = C.map(c => { const p = HUB.progress(c); done += p.done; xp += p.xp;
+    return `<a class="card course" href="${HUB.BASE}${c.repo}/"><div class="hd"><span class="em">${c.em}</span><div><h3>${HUB.esc(c.name)}</h3><div class="n">${c.n} LESSONS</div></div></div>
+      <div class="mute" style="font-size:11.5px">${HUB.esc(c.sub)}</div><div class="bar"><i style="width:${p.pct}%"></i></div>
+      <div class="meta"><span>${p.done}/${c.n} · ${p.pct}%</span><span>${p.xp ? p.xp + ' XP' : p.started ? 'in progress' : 'start →'}</span></div></a>`; }).join('');
+  document.getElementById('sLessons').textContent = done; document.getElementById('sXp').textContent = xp;
+  const first = C.findIndex(c => HUB.progress(c).pct < 100);
+  document.getElementById('path').innerHTML = C.map((c, i) => `<span class="${HUB.progress(c).pct === 100 ? 'done' : i === first ? 'now' : ''}">${c.em} ${HUB.esc(c.name.replace(' Explorer', ''))}</span>`).join('<i>→</i>');
+  const days = Math.ceil((HUB.EXAM_DATE - Date.now()) / 86400000);
+  document.getElementById('cd').textContent = days > 0 ? days : days === 0 ? 'TODAY' : '✓';
+  document.getElementById('cdTxt').textContent = days > 0 ? `days to exam day (Dec 15, 2026)` : days === 0 ? 'Exam day. You’ve got this!' : 'Exam day has passed: on to SAA!';
+  let ex = {}; try { ex = JSON.parse(localStorage.getItem('ccp-sim-v1') || '{}'); } catch (e) {}
+  const hist = (ex.history || []).filter(h => h.mode === 'full');
+  if ((ex.history || []).length) { const best = Math.max(...ex.history.map(h => h.score)); document.getElementById('sExam').textContent = best; document.getElementById('exHist').textContent = `${ex.history.length} attempt(s) · best ${best}/1000${hist.length ? ` · last full exam ${hist[hist.length - 1].score}` : ''}`; }
+  let dr = {}; try { dr = JSON.parse(localStorage.getItem('svc-drill-v1') || '{}'); } catch (e) {}
+  if (dr.best) document.getElementById('drBest').textContent = `Best: ${dr.best} pts · ${dr.games || 0} game(s)`;
+  const all = Object.keys(STUDY.load()).length, due = STUDY.due().length;
+  document.getElementById('sDue').textContent = due; document.getElementById('revTxt').textContent = `${all} saved · ${due} due now`;
+  document.getElementById('revBtn').onclick = document.getElementById('revCard').onclick = () => STUDY.review(false);
+})();
+</script>
+</body>
+</html>

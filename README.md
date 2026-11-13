@@ -1,0 +1,37 @@
+# ☁️ Cloud Learning Hub, by Raul (@rmctech-ai)
+
+**Live:** https://rmctech-ai.github.io/
+
+My home base for learning cloud engineering, on the way from AWS Cloud Practitioner to Solutions Architect and Cloud Security.
+
+## What's here
+
+| | |
+|---|---|
+| 🏠 **Home** | All 8 Explorer courses with live progress (read from your browser), CCP countdown, stats and roadmap |
+| 📝 **CCP Exam Simulator** | 156 original CLF-C02-style questions across the 4 domains. Full exam (65 Q / 90 min, domain-weighted), half exam, quick 10 and domain practice. Flag for review, timer, domain breakdown, and an explanation for **every** option. Options are shuffled each attempt and least-seen questions come first. |
+| ⚡ **"Which service?" Drill** | 99 real-world scenarios, 108 AWS services, 15 seconds per round, same-category distractors, streak bonuses and a searchable service cheat sheet |
+| 📚 **My Mistakes** | A spaced-repetition deck shared by the hub **and all 8 courses**: every missed question comes back after 1 day and 3 days until it's answered right 3 times |
+
+## The Explorer series
+
+| Course | Topic |
+|---|---|
+| [🐧 Linux Explorer](https://rmctech-ai.github.io/Linux-Explorer/) | Shell, files, permissions, processes, networking |
+| [🐍 Python Explorer](https://rmctech-ai.github.io/Python-Explorer/) | Python for cloud, automation and security |
+| [🔐 IAM Explorer](https://rmctech-ai.github.io/IAM-Explorer/) | Policies, roles, SCPs, policy simulator |
+| [🌐 VPC Explorer](https://rmctech-ai.github.io/VPC-Explorer/) | Subnets, routing, SGs, NACLs, packet tracer |
+| [🏗️ IaC Explorer](https://rmctech-ai.github.io/IaC-Explorer/) | CloudFormation, SAM, Terraform, CDK |
+| [λ Serverless Explorer](https://rmctech-ai.github.io/Serverless-Explorer/) | Lambda, API Gateway, DynamoDB, events |
+| [🚀 CI/CD Explorer](https://rmctech-ai.github.io/CICD-Explorer/) | GitHub Actions, OIDC, DevSecOps |
+| [🛡️ Cloud Security Explorer](https://rmctech-ai.github.io/CloudSecurity-Explorer/) | CloudTrail hunting, KMS, GuardDuty, incident response |
+
+## Notes
+
+- Static site (HTML/CSS/vanilla JS), no build step, no tracking. Progress is stored only in your browser's localStorage.
+- The practice questions are original study material written to match the published CLF-C02 exam guide domains. They are **not** real exam questions. Always confirm details in the AWS documentation.
+- Course layout framework inspired by [Protocol Explorer](https://protocol-explorer-alpha.vercel.app/).
+
+## License
+
+MIT © 2026 Raul (rmctech-ai)
