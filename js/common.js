@@ -8,7 +8,11 @@ window.HUB = (function () {
     { key: 'iac-explorer-v1', repo: 'IaC-Explorer', name: 'IaC Explorer', em: '🏗️', n: 13, sub: 'CloudFormation, SAM, Terraform, CDK' },
     { key: 'serverless-explorer-v1', repo: 'Serverless-Explorer', name: 'Serverless Explorer', em: 'λ', n: 13, sub: 'Lambda, API Gateway, DynamoDB, events' },
     { key: 'cicd-explorer-v1', repo: 'CICD-Explorer', name: 'CI/CD Explorer', em: '🚀', n: 12, sub: 'GitHub Actions, OIDC, DevSecOps' },
-    { key: 'cloudsecurity-explorer-v1', repo: 'CloudSecurity-Explorer', name: 'Cloud Security Explorer', em: '🛡️', n: 12, sub: 'CloudTrail hunting, KMS, GuardDuty, IR' }
+    { key: 'cloudsecurity-explorer-v1', repo: 'CloudSecurity-Explorer', name: 'Cloud Security Explorer', em: '🛡️', n: 12, sub: 'CloudTrail hunting, KMS, GuardDuty, IR' },
+    { key: 'wellarchitected-explorer-v1', repo: 'WellArchitected-Explorer', name: 'Well-Architected Explorer', em: '🏛️', n: 16, sub: '16 design principles, 6 pillars, review board' },
+    { key: 'security-journey-v1', repo: 'aws-security-journey/course', name: 'Security Journey Explorer', em: '🧭', n: 15, sub: 'Attack · Defense · In my world, Python defense lab' },
+    { key: 'n8n-explorer-v1', repo: 'N8N-Explorer', name: 'n8n Explorer', em: '🔁', n: 15, sub: 'Process mapping, core nodes, AI agents, RAG' },
+    { key: 'claudecode-explorer-v1', repo: 'ClaudeCode-Explorer', name: 'Claude Code Explorer', em: '🤖', n: 14, sub: 'Claude Code, MCP, Claude API, Bedrock' }
   ];
   const BASE = 'https://rmctech-ai.github.io/';
   const EXAM_DATE = new Date('2026-12-15T09:00:00+08:00');
