@@ -14,7 +14,7 @@ window.HUB = (function () {
   const EXAM_DATE = new Date('2026-12-15T09:00:00+08:00');
   const progress = c => { try { const p = JSON.parse(localStorage.getItem(c.key) || '{}'); const done = Object.keys(p.done || {}).length; return { done, xp: p.xp || 0, pct: Math.min(100, Math.round(done / c.n * 100)), started: !!p.last || done > 0 }; } catch (e) { return { done: 0, xp: 0, pct: 0, started: false }; } };
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  function theme() { let t = 'light'; try { t = localStorage.getItem('hub-theme') || 'light'; } catch (e) {} document.documentElement.dataset.theme = t; }
+  function theme() { let t = 'dark'; try { t = localStorage.getItem('rmc-theme') || 'dark'; } catch (e) {} document.documentElement.dataset.theme = t; }
   function header(active) {
     theme();
     const links = [['index.html', 'HOME', 'home'], ['exam.html', 'CCP EXAM', 'exam'], ['drill.html', 'SERVICE DRILL', 'drill']];
@@ -22,7 +22,7 @@ window.HUB = (function () {
     h.innerHTML = `<a class="brand" href="index.html"><span class="lg">RMC</span><span><b>CLOUD LEARNING HUB</b><small>RAUL · RMCTECH-AI</small></span></a>
       <nav class="nav">${links.map(([u, t, k]) => `<a class="tbtn ${k === active ? 'on' : ''}" href="${u}">${t}</a>`).join('')}<span id="stAnchor"></span><button class="tbtn" id="themeBtn" title="Light / dark">◐</button></nav>`;
     document.body.prepend(h);
-    h.querySelector('#themeBtn').onclick = () => { const t = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = t; try { localStorage.setItem('hub-theme', t); } catch (e) {} };
+    h.querySelector('#themeBtn').onclick = () => { const t = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = t; try { localStorage.setItem('rmc-theme', t); } catch (e) {} };
     const f = document.createElement('footer'); f.className = 'wrap'; f.style.paddingTop = 0;
     f.innerHTML = `<div class="foot"><span>Built by <a href="https://github.com/rmctech-ai">Raul (@rmctech-ai)</a> · Course layout inspired by Protocol Explorer</span><span>Practice questions are original study material, not real exam questions. Always confirm details in the AWS docs.</span></div>`;
     document.body.append(f);
