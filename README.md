@@ -39,6 +39,7 @@ My home base for learning cloud engineering, on the way from AWS Cloud Practitio
 | [🏛️ Architecture Atlas](https://rmctech-ai.github.io/aws-city-map/atlas/) | 5 real-world designs, mock exams, Select TWO/THREE trainer |
 | [🛰️ Request Explorer](https://rmctech-ai.github.io/aws-city-map/explorer/) | Animated request flows through my portfolio projects |
 | [📘 Service Field Guide](https://rmctech-ai.github.io/aws-city-map/field-guide/) | 119 services, exam traps, Quiz me |
+| [🧰 HostGator → AWS](https://rmctech-ai.github.io/hostgator-to-aws/) | My 3 years of HostGator support mapped to AWS: stack map, troubleshooter, CLI translator, STAR stories, quiz |
 
 ## Notes
 

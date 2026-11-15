@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HostGator → AWS · Cloud Learning Hub</title>
+<meta name="description" content="How three years of HostGator web hosting support maps to AWS: a stack map with the shared responsibility model, a troubleshooter, a Linux-to-AWS CLI translator, interview stories and a quiz.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/hub.css">
+<style>
+/* Page-only styles, built on the hub tokens. Blue lane = HostGator, amber lane = AWS. */
+:root{ --hgc:var(--blue); --awsc:var(--amber); }
+.hgSoft{background:color-mix(in srgb,var(--hgc) 12%,var(--panel))}
+.awsSoft{background:color-mix(in srgb,var(--awsc) 14%,var(--panel))}
+.secnav{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
+.secnav a{font-size:10.5px}
+.tbtn[aria-pressed="true"]{border-color:var(--blue);color:var(--blue);background:var(--blueSoft)}
+.lead{font-size:14px;max-width:70ch;margin:0}
+.lane-hg{color:var(--hgc)} .lane-aws{color:var(--awsc)}
+section{scroll-margin-top:70px}
+.sechead{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}
+.sechead p{margin:0 0 12px;max-width:72ch}
+.empty{color:var(--mute);font-style:italic}
+
+/* pills */
+.pill{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.08em;padding:2px 7px;border-radius:4px;white-space:nowrap;border:1.5px solid}
+.p-provider{color:var(--blue);border-color:var(--blue)}
+.p-shared{color:var(--purple);border-color:var(--purple)}
+.p-you{color:var(--green);border-color:var(--green)}
+
+/* stack */
+.stack-wrap{display:grid;grid-template-columns:1fr 360px;gap:14px;align-items:start}
+.stack{overflow-x:auto}
+.lane-head,.layer{display:grid;grid-template-columns:140px 1fr 1fr;gap:10px}
+.lane-head{padding:0 6px 8px;font-size:10.5px;font-weight:800;letter-spacing:.12em}
+.flow{display:flex;flex-direction:column;gap:4px;min-width:580px}
+.layer{align-items:stretch;border:1.5px solid transparent;border-radius:6px;padding:4px 6px;background:none;text-align:left;width:100%;font-size:12.5px}
+.layer:hover{border-color:var(--line)}
+.layer[aria-selected="true"]{border-color:var(--blue);background:var(--blueSoft)}
+.lname{font-size:11px;color:var(--mute);font-weight:700;align-self:center;display:flex;gap:7px;align-items:center}
+.tick{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--faint);flex:none}
+.layer.learned .tick{background:var(--green);border-color:var(--green)}
+.box{border-radius:5px;padding:6px 9px;display:flex;justify-content:space-between;align-items:center;gap:8px;border-left:3px solid}
+.box.hg{border-color:var(--hgc)} .box.aws{border-color:var(--awsc)}
+.box.hg{background:color-mix(in srgb,var(--hgc) 12%,var(--panel))}
+.box.aws{background:color-mix(in srgb,var(--awsc) 14%,var(--panel))}
+.box .pill{display:none}
+.show-who .box .pill{display:inline-block}
+.show-who .box.hg,.show-who .box.aws{background:var(--panel)}
+.legend{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:11px;color:var(--mute);margin-top:10px}
+.detail{position:sticky;top:76px}
+.detail h3{font-size:18px;margin-bottom:10px}
+.detail dl{margin:0;display:grid;gap:10px}
+.detail dt{font-size:10px;font-weight:800;letter-spacing:.14em;color:var(--mute)}
+.detail dd{margin:3px 0 0}
+.say{border-left:3px solid var(--awsc);padding:8px 10px;border-radius:4px;background:color-mix(in srgb,var(--awsc) 10%,var(--panel))}
+.detail .row{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.learn-toggle[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+#statLearned{font-variant-numeric:tabular-nums}
+
+/* troubleshooter */
+.ts{display:grid;grid-template-columns:250px 1fr;gap:14px}
+.ts-menu{display:flex;flex-direction:column;gap:6px}
+.ts-menu .tbtn{text-align:left;padding:10px 12px}
+.crumbs{font-size:10.5px;color:var(--mute);letter-spacing:.06em;margin-bottom:10px}
+.q{font-size:16px;font-weight:700;margin-bottom:12px}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.opts .tbtn{text-align:left;padding:11px 12px;font-size:11.5px;letter-spacing:.02em}
+.steps-head,.steps li{display:grid;grid-template-columns:26px 1fr 1fr;gap:10px}
+.steps-head{font-size:10px;font-weight:800;letter-spacing:.12em;margin-bottom:6px}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:8px;counter-reset:s}
+.steps li{align-items:start;counter-increment:s}
+.steps li::before{content:counter(s);font-size:11px;font-weight:800;width:22px;height:22px;border-radius:5px;background:var(--blue);color:#fff;display:grid;place-items:center}
+.steps .c{border-radius:5px;padding:7px 9px;border-left:3px solid;font-size:12.5px}
+.steps .c.hg{border-color:var(--hgc);background:color-mix(in srgb,var(--hgc) 12%,var(--panel))}
+.steps .c.aws{border-color:var(--awsc);background:color-mix(in srgb,var(--awsc) 14%,var(--panel))}
+.note{margin-top:12px;padding:9px 11px;border:1.5px dashed var(--line);border-radius:6px;font-size:12.5px}
+
+/* commands */
+input[type="search"]{width:100%;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:9px 12px;font:inherit;margin-bottom:12px}
+input[type="search"]:focus{outline:none;border-color:var(--blue)}
+.cmds{display:grid;gap:8px}
+.cmd{display:grid;grid-template-columns:190px 1fr 1fr;gap:10px;align-items:start}
+.cmd .task{font-weight:700;font-size:12.5px}
+.cmd .task small{display:block;color:var(--mute);font-weight:400;font-size:10.5px;letter-spacing:.06em;margin-top:2px}
+.code{position:relative;border-radius:5px;padding:8px 10px;padding-right:62px;font-size:11.5px;overflow-x:auto;white-space:pre;border-left:3px solid;background:var(--term);color:#dbe6ff}
+.code.hg{border-color:var(--hgc)} .code.aws{border-color:var(--awsc)}
+.code .lbl{display:block;font-size:9.5px;font-weight:800;letter-spacing:.12em;margin-bottom:3px}
+.code.hg .lbl{color:#7aa2ff} .code.aws .lbl{color:#fbbf24}
+.copy{position:absolute;top:6px;right:6px;font-size:9.5px;font-weight:800;letter-spacing:.08em;padding:3px 7px;border-radius:4px;border:1px solid #33415f;background:#141c33;color:#dbe6ff}
+
+/* stories */
+.story{display:flex;flex-direction:column;gap:10px}
+.star{display:grid;grid-template-columns:22px 1fr;gap:6px 8px;margin:0;font-size:12.5px}
+.star dt{font-weight:800;color:#fff;background:var(--blue);border-radius:4px;text-align:center;height:20px;line-height:20px;font-size:11px}
+.star dd{margin:0}
+.awslink{font-size:12px;border-left:3px solid var(--awsc);padding:7px 9px;border-radius:4px;background:color-mix(in srgb,var(--awsc) 10%,var(--panel))}
+.story .tbtn{align-self:flex-start;margin-top:auto}
+
+/* pitch */
+.pitch{display:grid;grid-template-columns:1fr 240px;gap:14px}
+#pitchText{font-size:14px;line-height:1.7}
+.pitch-side{display:flex;flex-direction:column;gap:10px}
+.pitch-side .card b{display:block;font-size:22px;color:var(--blue);font-variant-numeric:tabular-nums}
+.pitch-side .card span{font-size:10.5px;letter-spacing:.1em;color:var(--mute)}
+.qa{margin-top:14px;display:grid;gap:8px}
+.qa h3{font-size:12px;letter-spacing:.1em}
+details.qa-item{background:var(--panel);border:1.5px solid var(--line);border-radius:var(--r);padding:10px 14px}
+details.qa-item summary{cursor:pointer;font-weight:700}
+details.qa-item p{margin:8px 0 0}
+
+/* quiz */
+.quiz{max-width:780px}
+.quiz .top2{display:flex;justify-content:space-between;font-size:10.5px;letter-spacing:.1em;color:var(--mute)}
+.quiz .prompt{font-size:14px;margin:8px 0 12px}
+.quiz .prompt b{color:var(--hgc)}
+.quiz .answers{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.quiz .answers .tbtn{text-align:left;padding:11px 12px;font-size:12px;letter-spacing:.02em}
+.quiz .answers .tbtn.right{border-color:var(--green);color:var(--green);background:color-mix(in srgb,var(--green) 12%,var(--panel))}
+.quiz .answers .tbtn.wrong{border-color:var(--red);color:var(--red);background:color-mix(in srgb,var(--red) 10%,var(--panel))}
+.quiz .fb{margin-top:12px;min-height:1.5em}
+
+/* library */
+.lib{columns:3 280px;column-gap:14px}
+.lib-group{break-inside:avoid;margin-bottom:14px}
+.lib-group h3{display:flex;justify-content:space-between;font-size:12.5px;letter-spacing:.06em}
+.lib-group h3 span{color:var(--mute);font-weight:400}
+.lib-group ul{margin:0;padding-left:16px;font-size:12px}
+.lib-group li{margin:3px 0}
+.aws-tag{font-size:10.5px;letter-spacing:.06em;color:var(--awsc);margin-top:8px;font-weight:700}
+
+@media (max-width:900px){ .stack-wrap,.ts,.pitch{grid-template-columns:1fr} .detail{position:static} .cmd{grid-template-columns:1fr} }
+@media (max-width:560px){ .steps-head,.steps li{grid-template-columns:22px 1fr} .steps li .c.aws{grid-column:2} .steps-head .lane-aws{display:none} .quiz .answers{grid-template-columns:1fr} }
+@media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <div class="card">
+      <p class="kicker">TECHNICAL WEB ADVISOR · CONCENTRIX, HOSTGATOR ACCOUNT · 2020–2023</p>
+      <h1>From <span class="lane-hg">HostGator support</span> to <span class="lane-aws">AWS cloud</span></h1>
+      <p class="mute lead">For three years I fixed live websites for real customers: DNS, email, SSL, firewall blocks, server errors and backups. AWS runs on the same building blocks. This page matches each one to the AWS service that does the same job.</p>
+      <nav class="secnav btnrow" aria-label="Sections">
+        <a class="tbtn" href="#stack">STACK MAP</a><a class="tbtn" href="#troubleshoot">TROUBLESHOOTER</a><a class="tbtn" href="#commands">COMMANDS</a><a class="tbtn" href="#stories">STORIES</a><a class="tbtn" href="#pitch">PITCH</a><a class="tbtn" href="#quiz">QUIZ</a><a class="tbtn" href="#library">NOTES LIBRARY</a>
+      </nav>
+    </div>
+    <div class="card">
+      <p class="kicker">MY PROGRESS</p>
+      <div class="stat">
+        <div><b>3 YRS</b><span>HOSTING SUPPORT</span></div>
+        <div><b id="statLayers">15</b><span>LAYERS MAPPED</span></div>
+        <div><b>~150</b><span>LINUX ADMIN CMDS</span></div>
+        <div><b id="statLearned">0/15</b><span>LAYERS LEARNED</span></div>
+      </div>
+      <div class="bar" style="margin-top:12px"><i id="learnBar" style="width:0;background:var(--green)"></i></div>
+    </div>
+  </section>
+
+  <section id="stack">
+    <div class="sechead">
+      <div><h2>ONE WEBSITE, TWO STACKS</h2><p class="mute">Follow a visitor's request from the domain name down to the data center. Click a layer to see what I did there and how AWS handles it. "Who manages it?" shows the shared responsibility model.</p></div>
+      <button class="tbtn" id="whoToggle" aria-pressed="false">WHO MANAGES IT?</button>
+    </div>
+    <div class="stack-wrap">
+      <div class="card stack" id="stackBox">
+        <div class="lane-head" aria-hidden="true"><span></span><span class="lane-hg">HOSTGATOR (SHARED HOSTING)</span><span class="lane-aws">AWS (YOU BUILD IT)</span></div>
+        <div class="flow" id="flow" role="listbox" aria-label="Stack layers"></div>
+        <div class="legend" id="legend" hidden>
+          <span class="pill p-provider">PROVIDER</span> runs it for you
+          <span class="pill p-shared">SHARED</span> provider runs it, you configure it
+          <span class="pill p-you">YOU</span> build, patch and secure it
+        </div>
+      </div>
+      <aside class="card detail" id="detail" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section id="troubleshoot">
+    <h2>TROUBLESHOOTER</h2>
+    <p class="mute" style="margin:0 0 12px">The checks I ran on real tickets, side by side with where you look on AWS. Pick a symptom and answer the questions.</p>
+    <div class="ts">
+      <div class="ts-menu" id="tsMenu" role="group" aria-label="Symptom"></div>
+      <div class="card" id="tsPanel" aria-live="polite" style="min-height:240px"></div>
+    </div>
+  </section>
+
+  <section id="commands">
+    <h2>COMMAND TRANSLATOR</h2>
+    <p class="mute" style="margin:0 0 12px">The Linux command I'd run on a hosting server, next to the AWS CLI command for the same job. IDs like <code>i-0abc123</code> are placeholders.</p>
+    <label for="cmdSearch" style="position:absolute;left:-9999px">Search commands</label>
+    <input type="search" id="cmdSearch" placeholder="Search: dns, logs, backup, cpu…">
+    <div class="cmds" id="cmds"></div>
+  </section>
+
+  <section id="stories">
+    <h2>INTERVIEW STORIES</h2>
+    <p class="mute" style="margin:0 0 12px">Three real tickets, with no customer details, in Situation · Task · Action · Result format. Each fits in under two minutes.</p>
+    <div class="grid" id="storyList" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))"></div>
+  </section>
+
+  <section id="pitch">
+    <div class="sechead">
+      <div><h2>PITCH BUILDER</h2><p class="mute">Pick who you're talking to. Speaking time assumes about 130 words a minute.</p></div>
+      <div class="btnrow" style="margin:0 0 12px" role="group" aria-label="Audience" id="pitchTabs"></div>
+    </div>
+    <div class="pitch">
+      <div class="card" id="pitchText"></div>
+      <div class="pitch-side">
+        <div class="card"><b id="pitchWords">0</b><span>WORDS</span></div>
+        <div class="card"><b id="pitchTime">0s</b><span>TO SAY OUT LOUD</span></div>
+        <button class="btn" id="pitchCopy">COPY THIS PITCH</button>
+      </div>
+    </div>
+    <div class="qa" id="qaList"></div>
+  </section>
+
+  <section id="quiz">
+    <h2>QUICK QUIZ</h2>
+    <p class="mute" style="margin:0 0 12px">Ten questions. You know the HostGator side, so name the AWS service. Good CCP practice.</p>
+    <div class="card quiz" id="quizBox"></div>
+  </section>
+
+  <section id="library">
+    <h2>NOTES LIBRARY</h2>
+    <p class="mute" style="margin:0 0 12px">My saved help articles from the HostGator years, grouped by topic with duplicates removed.</p>
+    <label for="libSearch" style="position:absolute;left:-9999px">Search notes</label>
+    <input type="search" id="libSearch" placeholder="Search articles: mx, ssl, wordpress, inode…">
+    <div class="lib" id="lib"></div>
+  </section>
+  <p class="mute" style="font-size:11px;margin-top:30px">Built from my own support notes. No customer data, credentials or internal company links. HostGator, AWS and related names are trademarks of their owners.</p>
+</main>
+<script src="../js/common.js"></script>
+<script>
+HUB.header('');
+/* the shared header uses root-relative page links; point them up one level from this folder */
+document.querySelectorAll('header.top a[href]').forEach(a => { const h = a.getAttribute('href'); if (!/^(https?:|#|\.\.\/)/.test(h)) a.setAttribute('href', '../' + h); });
+</script>
+<script>
+(function(){
+"use strict";
+
+/* ---------- storage (optional) ---------- */
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+const $ = s => document.querySelector(s);
+const esc = HUB.esc || (s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])));
+function toast(msg){ HUB.toast(msg); }
+async function copy(text){
+  try{ await navigator.clipboard.writeText(text); toast("Copied"); }
+  catch(e){ toast("Copy blocked here; select the text instead"); }
+}
+
+/* ---------- data: stack layers ---------- */
+const WHO = {provider:["p-provider","Provider"], shared:["p-shared","Shared"], you:["p-you","You"]};
+const layers = [
+ {id:"dns",name:"Domain & DNS",hg:"Nameservers + cPanel Zone Editor",aws:"Amazon Route 53",hgWho:"shared",awsWho:"shared",
+  did:"Fixed MX, A and CNAME records, pointed nameservers, handled domain transfers and explained propagation delays.",
+  idea:"DNS points a name to where a service lives. A wrong record breaks a site or email even when the server is fine.",
+  exam:"Cloud Technology and Services",
+  say:"I've edited DNS zones for hundreds of domains. On AWS that's Route 53: hosted zones, records and health checks."},
+ {id:"cdn",name:"CDN & caching",hg:"Site caching, SiteLock CDN",aws:"Amazon CloudFront",hgWho:"provider",awsWho:"shared",
+  did:"Purged caches, explained cached pages after a resource limit and checked speed with GTmetrix.",
+  idea:"Serve content close to the visitor and cache it so the origin server works less.",
+  exam:"Cloud Technology and Services",
+  say:"I've cleared caches and tuned slow sites. CloudFront does the same at global edge locations."},
+ {id:"waf",name:"Web firewall",hg:"ModSecurity rules",aws:"AWS WAF + AWS Shield",hgWho:"provider",awsWho:"shared",
+  did:"Read ModSecurity entries in Apache logs, found the rule ID and whitelisted only that rule for a legitimate script.",
+  idea:"An application firewall blocks bad requests. Tune it for false positives without turning protection off.",
+  exam:"Security and Compliance",
+  say:"I tuned web application firewall rules by rule ID. That's exactly how AWS WAF managed rules and exceptions work."},
+ {id:"net",name:"Network access",hg:"Server firewall, IP allow/block",aws:"VPC, Security Groups, NACLs",hgWho:"provider",awsWho:"you",
+  did:"Allowed a single customer IP into a restricted site, checked if the firewall had blocked an IP, ran port checks.",
+  idea:"Allow only the traffic you need. Everything else is denied.",
+  exam:"Security and Compliance",
+  say:"I've allowed and blocked IPs at the server level. In AWS I'd do it with Security Groups and NACLs inside a VPC."},
+ {id:"ssl",name:"SSL / HTTPS",hg:"AutoSSL, paid certificates",aws:"AWS Certificate Manager",hgWho:"provider",awsWho:"shared",
+  did:"Fixed padlock and mixed-content errors, forced HTTPS with a 301 redirect and solved certificate warnings on phones.",
+  idea:"Encrypt traffic in transit, and renew certificates automatically.",
+  exam:"Security and Compliance",
+  say:"I've fixed a lot of 'not secure' warnings. ACM issues and renews certificates for CloudFront and load balancers."},
+ {id:"web",name:"Web server",hg:"Apache on a shared server",aws:"EC2 / Lightsail + Load Balancer",hgWho:"provider",awsWho:"you",
+  did:"Diagnosed 403, 500 and 503 errors from Apache logs, fixed .htaccess rules and file permissions.",
+  idea:"Pick the compute that fits the workload. On EC2 you patch the OS yourself.",
+  exam:"Cloud Technology and Services",
+  say:"I read Apache logs every day to find root causes. On AWS that server is EC2 behind an Application Load Balancer."},
+ {id:"scale",name:"Limits & scaling",hg:"CPU and process limits (throttling)",aws:"EC2 Auto Scaling + CloudWatch alarms",hgWho:"provider",awsWho:"you",
+  did:"Explained 503 errors caused by CPU limits (25 processes, 25%+ CPU for 90 seconds) and helped customers find the cause.",
+  idea:"Watch usage and add capacity before the site breaks, instead of throttling it.",
+  exam:"Cloud Concepts",
+  say:"On shared hosting, a traffic spike meant throttling. On AWS, Auto Scaling adds servers instead. That's elasticity."},
+ {id:"app",name:"App & code",hg:"WordPress, plugins, PHP version",aws:"Your app on EC2 or Elastic Beanstalk",hgWho:"you",awsWho:"you",
+  did:"Recovered locked-out WordPress sites: debug mode, plugin isolation, PHP upgrades and core-file repair.",
+  idea:"The application is always the customer's job, on any platform.",
+  exam:"Security and Compliance",
+  say:"Even on managed hosting the app was the customer's job. AWS draws the same line in the shared responsibility model."},
+ {id:"db",name:"Database",hg:"MySQL via cPanel / phpMyAdmin",aws:"Amazon RDS for MySQL / Aurora",hgWho:"provider",awsWho:"shared",
+  did:"Created database users, repaired tables, set up remote MySQL access and updated WordPress database URLs.",
+  idea:"Managed databases still need users, backups and access rules.",
+  exam:"Cloud Technology and Services",
+  say:"I've managed MySQL users and repairs. RDS takes over patching and backups, and I still own access and schema."},
+ {id:"files",name:"File storage",hg:"File Manager, FTP, disk and inode quotas",aws:"Amazon S3, EBS, EFS",hgWho:"provider",awsWho:"shared",
+  did:"Handled uploads, FTP access, inode limits and disk usage reports.",
+  idea:"Storage has limits and costs. Know what is using it.",
+  exam:"Cloud Technology and Services",
+  say:"Inode and disk limits taught me storage costs. On AWS: S3 for objects, EBS for server disks, EFS for shared files."},
+ {id:"mail",name:"Email",hg:"cPanel mail, MX, SPF/DKIM",aws:"Amazon SES, Amazon WorkMail",hgWho:"provider",awsWho:"shared",
+  did:"Fixed send-but-not-receive problems, bounce-backs, SPF/DKIM records and blacklisted sender IPs.",
+  idea:"Deliverability depends on DNS records and the sender's reputation.",
+  exam:"Cloud Technology and Services",
+  say:"Email deliverability was a daily ticket. SES uses the same SPF, DKIM and DMARC records I already know."},
+ {id:"backup",name:"Backups",hg:"CodeGuard, cPanel backups",aws:"AWS Backup, EBS/RDS snapshots",hgWho:"provider",awsWho:"you",
+  did:"Ran restores, took a backup before every WordPress upgrade and walked customers through CodeGuard.",
+  idea:"Back up before every change, and test that restores work.",
+  exam:"Cloud Concepts",
+  say:"My rule was back up before any fix. AWS Backup and snapshots make that a policy instead of a habit."},
+ {id:"logs",name:"Monitoring & logs",hg:"Apache, mail and cPanel logs",aws:"Amazon CloudWatch, AWS CloudTrail",hgWho:"provider",awsWho:"you",
+  did:"Searched past log entries and watched live ones to replicate an error before fixing it.",
+  idea:"Find the root cause in the logs instead of guessing.",
+  exam:"Security and Compliance",
+  say:"Reading logs is my core skill. CloudWatch Logs holds app logs, and CloudTrail records who did what in the account."},
+ {id:"iam",name:"Logins & permissions",hg:"cPanel/FTP users, 755/644 permissions, SSH keys",aws:"AWS IAM (users, roles, policies)",hgWho:"shared",awsWho:"you",
+  did:"Verified account owners, reset access, fixed file permissions and set up SSH keys.",
+  idea:"Least privilege: give only the access a job needs.",
+  exam:"Security and Compliance",
+  say:"Account verification and permissions were strict at HostGator. IAM is the AWS version, built on least privilege."},
+ {id:"dc",name:"Physical data center",hg:"HostGator data centers",aws:"AWS Regions & Availability Zones",hgWho:"provider",awsWho:"provider",
+  did:"Ran traceroutes and mtr to show where traffic slowed between a customer and the server.",
+  idea:"The provider always owns the hardware, power and buildings.",
+  exam:"Cloud Concepts",
+  say:"The hardware is always the provider's job. AWS spreads it across Regions and Availability Zones for resilience."}
+];
+
+/* ---------- stack render ---------- */
+let learned = new Set(store.get("hg2aws-learned", []));
+let current = store.get("hg2aws-current", "dns");
+function pill(who){ const w=WHO[who]; return `<span class="pill ${w[0]}">${w[1]}</span>`; }
+function renderFlow(){
+  $("#flow").innerHTML = layers.map(l => `
+    <button class="layer ${learned.has(l.id)?"learned":""}" role="option" data-id="${l.id}" aria-selected="${l.id===current}">
+      <span class="lname"><span class="tick" aria-hidden="true"></span>${esc(l.name)}</span>
+      <span class="box hg"><span>${esc(l.hg)}</span>${pill(l.hgWho)}</span>
+      <span class="box aws"><span>${esc(l.aws)}</span>${pill(l.awsWho)}</span>
+    </button>`).join("");
+}
+function renderDetail(){
+  const l = layers.find(x=>x.id===current) || layers[0];
+  const on = learned.has(l.id);
+  $("#detail").innerHTML = `
+    <p class="kicker">${esc(l.exam.toUpperCase())}</p>
+    <h3>${esc(l.name)}</h3>
+    <dl>
+      <div><dt>What I did at HostGator</dt><dd>${esc(l.did)}</dd></div>
+      <div><dt>AWS equivalent</dt><dd><b>${esc(l.aws)}</b></dd></div>
+      <div><dt>The shared idea</dt><dd>${esc(l.idea)}</dd></div>
+      <div><dt>Who manages it</dt><dd>HostGator: ${pill(l.hgWho)} &nbsp; AWS: ${pill(l.awsWho)}</dd></div>
+      <div><dt>Say it in an interview</dt><dd class="say">"${esc(l.say)}"</dd></div>
+    </dl>
+    <div class="row">
+      <button class="tbtn learn-toggle" id="learnBtn" aria-pressed="${on}">${on?"Learned ✓":"Mark as learned"}</button>
+      <button class="tbtn" id="sayCopy">Copy interview line</button>
+      <button class="tbtn" id="nextLayer">Next layer →</button>
+    </div>`;
+  $("#learnBtn").onclick = () => { learned.has(l.id)?learned.delete(l.id):learned.add(l.id); store.set("hg2aws-learned",[...learned]); renderAll(); };
+  $("#sayCopy").onclick = () => copy(l.say);
+  $("#nextLayer").onclick = () => { const i=layers.indexOf(l); select(layers[(i+1)%layers.length].id); };
+}
+function renderProgress(){
+  const n = learned.size, t = layers.length;
+  $("#statLayers").textContent = t;
+  $("#statLearned").textContent = `${n}/${t}`;
+  $("#learnBar").style.width = (n/t*100)+"%";
+}
+function select(id){ current=id; store.set("hg2aws-current",id); renderFlow(); renderDetail(); }
+function renderAll(){ renderFlow(); renderDetail(); renderProgress(); }
+$("#flow").addEventListener("click", e => { const b=e.target.closest(".layer"); if(b) select(b.dataset.id); });
+$("#flow").addEventListener("keydown", e => {
+  if(e.key!=="ArrowDown" && e.key!=="ArrowUp") return;
+  e.preventDefault();
+  const i = layers.findIndex(l=>l.id===current);
+  const n = (i + (e.key==="ArrowDown"?1:-1) + layers.length) % layers.length;
+  select(layers[n].id);
+  const b = $(`.layer[data-id="${layers[n].id}"]`); if(b) b.focus();
+});
+$("#whoToggle").addEventListener("click", e => {
+  const on = e.currentTarget.getAttribute("aria-pressed")!=="true";
+  e.currentTarget.setAttribute("aria-pressed", on);
+  $("#stackBox").classList.toggle("show-who", on);
+  $("#legend").hidden = !on;
+});
+renderAll();
+
+/* ---------- troubleshooter ---------- */
+const trees = {
+  site:{label:"Website is down or broken",start:"s0",nodes:{
+    s0:{q:"What does the visitor see?",opts:[["403 Forbidden","s403"],["500 Internal Server Error","s500"],["503 or very slow","s503"],["Site not found or the old site","sdns"],["\"Not secure\" warning","sssl"],["Locked out of WordPress admin","swp"]]},
+    s403:{title:"403 Forbidden",steps:[
+      ["Check folder/file permissions (755 / 644)","Check the IAM policy or S3 bucket policy allows the request"],
+      ["Look for deny rules in .htaccess","Check WAF rules and Security Group inbound rules"],
+      ["Search the error log for ModSecurity and the rule ID","Read AWS WAF logs to find the matched rule"],
+      ["Whitelist only that rule for that domain","Add a scoped rule exception, keep the rest of WAF on"]],
+      note:"A 403 means the server understood the request and refused it. Look for the rule that refused it."},
+    s500:{title:"500 Internal Server Error",steps:[
+      ["Check for 777 permissions (group-writable)","Check app logs in CloudWatch Logs"],
+      ["Rename .htaccess to rule out a bad directive","Roll back the last deployment or config change"],
+      ["Enable WP_DEBUG and read the PHP error","Check the EC2 instance's app and web server logs"],
+      ["Check whether the account hit resource limits","Check CPU and memory metrics in CloudWatch"]],
+      note:"An empty error log with a 500 often means the account hit resource limits."},
+    s503:{title:"503 or very slow",steps:[
+      ["Check the CPU and process count for the account","Check CPUUtilization and request count in CloudWatch"],
+      ["Find excessive requests from one IP or one page","Use ALB access logs or WAF rate-based rules"],
+      ["Turn on caching, optimize plugins","Put CloudFront in front, add caching"],
+      ["Whitelist the owner's IP so they can fix the site","Let Auto Scaling add instances instead of throttling"]],
+      note:"HostGator throttled; AWS can scale out. That difference is elasticity, a core exam idea."},
+    sdns:{title:"Site not found or showing the old site",steps:[
+      ["dig the domain: do the A record and nameservers match the server?","Check the Route 53 hosted zone records and the domain's NS records"],
+      ["Check propagation on whatsmydns.net","Check the record TTL; wait it out or lower it before changes"],
+      ["Preview with the hosts file before switching DNS","Test the load balancer or CloudFront URL directly"],
+      ["Check the domain hasn't expired (whois)","Check the domain status in Route 53 Domains"]],
+      note:"When a site 'disappears' after a move, it's usually DNS rather than the server."},
+    sssl:{title:"\"Not secure\" warning",steps:[
+      ["Check the certificate covers the domain (AutoSSL status)","Check the certificate in ACM is Issued and covers the domain"],
+      ["Force HTTPS with a 301 redirect in .htaccess","Set the HTTP→HTTPS redirect on CloudFront or the ALB listener"],
+      ["Fix mixed content (http:// images and scripts)","Same fix in the app; add upgrade-insecure-requests"],
+      ["Test with whynopadlock.com or SSLShopper","Test with openssl s_client and the browser dev tools"]],
+      note:"ACM certificates renew automatically when DNS validation records stay in place."},
+    swp:{title:"Locked out of WordPress admin",steps:[
+      ["Back up first","Snapshot the EBS volume or RDS database first"],
+      ["Turn on WP_DEBUG and read the error","Read the PHP errors in CloudWatch Logs"],
+      ["Disable plugins by renaming the plugins folder","Same, over Session Manager instead of FTP"],
+      ["Update the PHP version, re-upload core files","Update the runtime, or redeploy from a clean image"]],
+      note:"This is Story 1 below: a real ticket solved in a single call."}
+  }},
+  mail:{label:"Email problems",start:"m0",nodes:{
+    m0:{q:"What's going wrong with email?",opts:[["Can send, can't receive","mrecv"],["Messages bounce back","mbounce"],["Mail lands in spam","mspam"],["Phone shows a certificate error","mcert"]]},
+    mrecv:{title:"Can send but can't receive",steps:[
+      ["dig the domain MX: where does mail actually go?","Check the MX record in the Route 53 hosted zone"],
+      ["Fix the MX record in Zone Editor","Point MX to the SES inbound endpoint or WorkMail"],
+      ["Set email routing (local vs remote)","Check the SES receipt rule set is active"],
+      ["Explain the DNS propagation wait","Explain TTL; test with dig after it expires"]],
+      note:"This is Story 2: MX pointed to Google while the mailbox was on HostGator."},
+    mbounce:{title:"Messages bounce back",steps:[
+      ["Read the bounce code (5xx = permanent, 4xx = temporary)","Read bounce notifications from SES via SNS"],
+      ["Check the sender IP on MXToolbox / Spamhaus blacklists","Check the SES account's reputation dashboard"],
+      ["Check the hourly sending limit","Check SES sending quota and rate"],
+      ["Scan the customer's PC for malware if the IP is listed","Use dedicated IPs or SES managed IPs for reputation"]],
+      note:"A listed IP is often the customer's own network, not the mail server."},
+    mspam:{title:"Mail lands in spam",steps:[
+      ["Check the SPF record includes the sending server","Add the SES SPF / custom MAIL FROM record"],
+      ["Enable DKIM in cPanel","Turn on Easy DKIM in SES (3 CNAME records)"],
+      ["Check for spoofing in the email headers","Publish a DMARC record"],
+      ["Follow Gmail's bulk sender rules","Same rules apply to SES senders"]],
+      note:"SPF, DKIM and DMARC are DNS records, so this is really a DNS ticket."},
+    mcert:{title:"Phone shows a certificate error",steps:[
+      ["Use the server hostname, not mail.domain, as the incoming server","Use the WorkMail or SES endpoint hostnames"],
+      ["Check AutoSSL covers mail.domain","Certificates on AWS endpoints are managed by AWS"],
+      ["Re-enter ports: IMAP 993, SMTP 465/587 (SSL)","Same standard ports"]],
+      note:"The warning appears when the name typed in the phone doesn't match the certificate."}
+  }}
+};
+let tsTree="site", tsPath=[];
+function renderTsMenu(){
+  $("#tsMenu").innerHTML = Object.entries(trees).map(([k,t]) =>
+    `<button class="tbtn" data-k="${k}" aria-pressed="${k===tsTree}">${esc(t.label)}</button>`).join("");
+}
+function renderTs(){
+  const t = trees[tsTree];
+  const id = tsPath.length ? tsPath[tsPath.length-1] : t.start;
+  const n = t.nodes[id];
+  const crumbs = [t.label].concat(tsPath.map(p=>t.nodes[p].title||"")).join("  ›  ");
+  let html = `<div class="crumbs">${esc(crumbs)}</div>`;
+  if(n.q){
+    html += `<div class="q">${esc(n.q)}</div><div class="opts">${n.opts.map(o=>`<button class="tbtn" data-next="${o[1]}">${esc(o[0])}</button>`).join("")}</div>`;
+  } else {
+    html += `<div class="q">${esc(n.title)}</div>
+      <div class="steps-head"><span></span><span class="lane-hg">AT HOSTGATOR I WOULD…</span><span class="lane-aws">ON AWS YOU WOULD…</span></div>
+      <ol class="steps">${n.steps.map(s=>`<li><div class="c hg">${esc(s[0])}</div><div class="c aws">${esc(s[1])}</div></li>`).join("")}</ol>
+      <div class="note">${esc(n.note)}</div>
+      <div style="margin-top:14px"><button class="tbtn" data-back="1">← Pick another symptom</button></div>`;
+  }
+  $("#tsPanel").innerHTML = html;
+}
+$("#tsMenu").addEventListener("click", e => { const b=e.target.closest("[data-k]"); if(!b) return; tsTree=b.dataset.k; tsPath=[]; renderTsMenu(); renderTs(); });
+$("#tsPanel").addEventListener("click", e => {
+  const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.next){ tsPath.push(b.dataset.next); renderTs(); }
+  if(b.dataset.back){ tsPath=[]; renderTs(); }
+});
+renderTsMenu(); renderTs();
+
+/* ---------- commands ---------- */
+const cmds = [
+  ["Look up MX records","dns email","dig example.com MX","aws route53 list-resource-record-sets \\\n  --hosted-zone-id Z0123456789 \\\n  --query \"ResourceRecordSets[?Type=='MX']\""],
+  ["Check who owns a domain","dns domain","whois example.com","aws route53domains get-domain-detail \\\n  --domain-name example.com --region us-east-1"],
+  ["Search a log for an error","logs apache waf","grep \"ModSecurity\" /var/log/apache2/error.log","aws logs filter-log-events \\\n  --log-group-name /web/app \\\n  --filter-pattern \"ModSecurity\""],
+  ["Watch a log live","logs tail","tail -f /var/log/apache2/error.log","aws logs tail /web/app --follow"],
+  ["Check CPU usage","cpu performance 503","top","aws cloudwatch get-metric-statistics \\\n  --namespace AWS/EC2 --metric-name CPUUtilization \\\n  --dimensions Name=InstanceId,Value=i-0abc123 \\\n  --start-time 2026-11-14T00:00:00Z \\\n  --end-time 2026-11-14T06:00:00Z \\\n  --period 300 --statistics Average"],
+  ["Check disk usage","storage disk inode","du -sh ~/public_html/*","aws s3 ls s3://my-site-bucket --recursive \\\n  --summarize --human-readable"],
+  ["Back up a database","backup mysql database","mysqldump -u user -p mydb > mydb.sql","aws rds create-db-snapshot \\\n  --db-instance-identifier mydb \\\n  --db-snapshot-identifier mydb-before-upgrade"],
+  ["Restart the web server","apache restart server","sudo systemctl restart httpd","aws ssm send-command \\\n  --instance-ids i-0abc123 \\\n  --document-name AWS-RunShellScript \\\n  --parameters 'commands=[\"sudo systemctl restart httpd\"]'"],
+  ["Log in to a server","ssh access","ssh user@server.example.com","aws ssm start-session --target i-0abc123"],
+  ["Clear the site cache","cache cdn","(purge cache from the caching layer)","aws cloudfront create-invalidation \\\n  --distribution-id E1ABCDEF \\\n  --paths \"/*\""],
+  ["Block an abusive IP","firewall security ip","# .htaccess\nRequire not ip 203.0.113.5","aws wafv2 update-ip-set --name blocked-ips \\\n  --scope REGIONAL --id <ip-set-id> \\\n  --addresses 203.0.113.5/32 \\\n  --lock-token <token-from-get-ip-set>"],
+  ["See who can access what","permissions iam security","ls -l ~/public_html","aws iam list-attached-role-policies \\\n  --role-name WebServerRole"],
+  ["Check an SSL certificate","ssl https certificate","openssl s_client -connect example.com:443 \\\n  -servername example.com","aws acm list-certificates \\\n  --certificate-statuses ISSUED"],
+  ["Trace the network path","network traceroute","traceroute example.com","aws ec2 start-network-insights-analysis \\\n  --network-insights-path-id nip-0abc123"]
+];
+function renderCmds(){
+  const q = $("#cmdSearch").value.trim().toLowerCase();
+  const list = cmds.filter(c => !q || (c[0]+" "+c[1]+" "+c[2]+" "+c[3]).toLowerCase().includes(q));
+  $("#cmds").innerHTML = list.length ? list.map((c,i)=>`
+    <div class="cmd">
+      <div class="task">${esc(c[0])}<small>${esc(c[1])}</small></div>
+      <div class="code hg"><span class="lbl">Linux / hosting server</span>${esc(c[2])}<button class="copy" data-c="${esc(c[2])}">Copy</button></div>
+      <div class="code aws"><span class="lbl">AWS CLI</span>${esc(c[3])}<button class="copy" data-c="${esc(c[3])}">Copy</button></div>
+    </div>`).join("") : `<p class="empty">No commands match "${esc(q)}".</p>`;
+}
+$("#cmdSearch").addEventListener("input", renderCmds);
+$("#cmds").addEventListener("click", e => { const b=e.target.closest(".copy"); if(b) copy(b.dataset.c); });
+renderCmds();
+
+/* ---------- stories ---------- */
+const stories = [
+  {t:"Locked out of WordPress",S:"A small-business owner couldn't log in to her WordPress dashboard; the page was a wall of error text.",
+   T:"Get her back in without losing any content.",
+   A:"Turned on debug mode and read the errors. Found an outdated core and deprecated plugins. Took a backup, upgraded WordPress, disabled the broken plugins, moved PHP to 7.4 and disabled a faulty .htaccess.",
+   R:"She logged in on the same call, and I walked her through updating themes and plugins.",
+   aws:"Logs first, backup before change, keep runtimes patched: the same order for an EC2 or Lambda incident."},
+  {t:"Email sends but never arrives",S:"A nonprofit could send email but received nothing.",
+   T:"Find out where incoming mail was actually going.",
+   A:"Ran a dig MX lookup and saw the MX record pointed to Google, not HostGator. With her OK, I changed the MX record in the Zone Editor and set email routing to local.",
+   R:"Mail started arriving after DNS propagated. She knew how long to wait because I explained it.",
+   aws:"The same DNS work happens in Route 53 when connecting a domain to SES or WorkMail."},
+  {t:"Legitimate site blocked by the firewall",S:"Customers' own scripts were blocked with 403 or 406 errors.",
+   T:"Tell a real attack apart from a false positive.",
+   A:"Searched the Apache error log for the ModSecurity entry, read the rule ID, client IP and script path, and whitelisted only that rule for that domain.",
+   R:"The site worked again and the rest of the firewall stayed on. Globally banned rules went back to the developer.",
+   aws:"This is AWS WAF tuning: read the WAF log, find the matched rule, add a scoped exception."}
+];
+$("#storyList").innerHTML = stories.map((s,i)=>`
+  <article class="card story">
+    <h3>${esc(s.t)}</h3>
+    <dl class="star">
+      <dt>S</dt><dd>${esc(s.S)}</dd>
+      <dt>T</dt><dd>${esc(s.T)}</dd>
+      <dt>A</dt><dd>${esc(s.A)}</dd>
+      <dt>R</dt><dd>${esc(s.R)}</dd>
+    </dl>
+    <div class="awslink"><b>AWS link:</b> ${esc(s.aws)}</div>
+    <button class="tbtn" data-s="${i}">Copy story</button>
+  </article>`).join("");
+$("#storyList").addEventListener("click", e => {
+  const b=e.target.closest("[data-s]"); if(!b) return;
+  const s=stories[+b.dataset.s];
+  copy(`${s.t}\nSituation: ${s.S}\nTask: ${s.T}\nAction: ${s.A}\nResult: ${s.R}\nAWS link: ${s.aws}`);
+});
+
+/* ---------- pitch ---------- */
+const pitches = {
+  "Phone screen":"From 2020 to 2023 I was a Technical Web Advisor at Concentrix on the HostGator account. Every day I fixed live websites for real customers: DNS records, email delivery, SSL, firewall blocks, server errors and backups. I worked on Linux servers from the command line and read Apache logs to find root causes. Cloud runs on those same building blocks. On AWS they're Route 53, SES, Certificate Manager, WAF, CloudWatch and AWS Backup. I'm taking my AWS Cloud Practitioner exam in December so I can apply that experience at cloud scale.",
+  "Non-technical":"HostGator is like renting a furnished apartment: the landlord handles the building and you just live there. AWS is like getting the land, the materials and the tools, so you design and run the building yourself. For three years I was the person who fixed things when the apartment broke: the plumbing, which is DNS; the mail; the locks, which is security; and the power, which is server resources. Now I'm learning to build the whole building on AWS.",
+  "Technical interviewer":"My background is Tier 1 hosting support on Linux and cPanel. I diagnosed 403, 500 and 503 errors from Apache logs, tuned ModSecurity rules by rule ID, fixed MX, SPF and DKIM records, and recovered WordPress sites with backups, PHP upgrades and core-file repair. I worked from a command-line toolkit of about 150 admin commands. Mapped to AWS, that's CloudWatch Logs, WAF, Route 53, SES, RDS and AWS Backup. Where shared hosting throttled a busy site, I now design for Auto Scaling, and I'm learning to own the layers HostGator used to manage under the shared responsibility model."
+};
+let pitchKey = "Phone screen";
+function renderPitch(){
+  $("#pitchTabs").innerHTML = Object.keys(pitches).map(k=>`<button class="tbtn" data-p="${esc(k)}" aria-pressed="${k===pitchKey}">${esc(k)}</button>`).join("");
+  const txt = pitches[pitchKey];
+  $("#pitchText").textContent = "“"+txt+"”";
+  const w = txt.split(/\s+/).length;
+  $("#pitchWords").textContent = w;
+  $("#pitchTime").textContent = Math.round(w/130*60)+"s";
+}
+$("#pitchTabs").addEventListener("click", e => { const b=e.target.closest("[data-p]"); if(b){ pitchKey=b.dataset.p; renderPitch(); }});
+$("#pitchCopy").addEventListener("click", () => copy(pitches[pitchKey]));
+renderPitch();
+const qa = [
+  ["\"Do you have cloud experience?\"","Hosting and infrastructure support, yes: three years on Linux web servers handling DNS, email, SSL, security and backups. On AWS I'm certifying now and building portfolio projects on GitHub."],
+  ["\"How do you troubleshoot?\"","Reproduce it, check the logs, fix the smallest thing, back up first, then document it. Every ticket I closed had Issue, Replication steps and Resolution written down."],
+  ["\"Why move to cloud?\"","I've seen what breaks on servers. Cloud lets me prevent it with monitoring, automation and security built in from the start, instead of fixing it after a customer calls."],
+  ["\"Do you know security?\"","Hands-on with web firewall rules, IP allow and block lists, file permissions, SSL and malware response. Those map to AWS WAF, Security Groups, IAM and GuardDuty, and security is where I'm heading next."],
+  ["\"What's the shared responsibility model?\"","AWS secures the cloud itself: hardware, data centers and the managed services' infrastructure. The customer secures what they put in it: data, IAM, OS patches on EC2 and firewall rules. On HostGator, the provider took most of those; on AWS, more of them are mine."]
+];
+$("#qaList").innerHTML = "<h3 style='margin-top:6px'>Answers to common questions</h3>" + qa.map(x=>`<details class="qa-item"><summary>${esc(x[0])}</summary><p>${esc(x[1])}</p></details>`).join("");
+
+/* ---------- quiz ---------- */
+let quiz = null;
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function newQuiz(){
+  quiz = {qs: shuffle(layers).slice(0,10), i:0, score:0, answered:false};
+  renderQuiz();
+}
+function renderQuiz(){
+  const box = $("#quizBox");
+  if(quiz.i >= quiz.qs.length){
+    const best = Math.max(store.get("hg2aws-best",0), quiz.score); store.set("hg2aws-best",best);
+    box.innerHTML = `<div class="top2"><span>Done</span><span>Best: ${best}/10</span></div>
+      <h3 style="margin:10px 0">You scored ${quiz.score} out of 10</h3>
+      <p>${quiz.score>=8?"Ready to explain this in an interview.":"Review the stack map above, then try again."}</p>
+      <button class="tbtn" id="qAgain">Try again</button>`;
+    $("#qAgain").onclick = newQuiz; return;
+  }
+  const q = quiz.qs[quiz.i];
+  const wrong = shuffle(layers.filter(l=>l.id!==q.id)).slice(0,3);
+  const opts = shuffle([q].concat(wrong));
+  box.innerHTML = `<div class="top2"><span>Question ${quiz.i+1} of 10</span><span>Score: ${quiz.score}</span></div>
+    <p class="prompt">At HostGator I handled <b>${esc(q.hg)}</b> (${esc(q.name)}). Which AWS service does this job?</p>
+    <div class="answers">${opts.map(o=>`<button class="tbtn" data-a="${o.id}">${esc(o.aws)}</button>`).join("")}</div>
+    <div class="fb" id="qfb" aria-live="polite"></div>`;
+  quiz.answered=false;
+  box.querySelector(".answers").onclick = e => {
+    const b=e.target.closest("[data-a]"); if(!b||quiz.answered) return;
+    quiz.answered=true;
+    const ok = b.dataset.a===q.id;
+    if(ok) quiz.score++;
+    box.querySelectorAll("[data-a]").forEach(x=>{ if(x.dataset.a===q.id) x.classList.add("right"); else if(x===b) x.classList.add("wrong"); x.disabled=true; });
+    $("#qfb").innerHTML = `${ok?"Correct.":"Not this one."} ${esc(q.idea)} <button class="tbtn" id="qNext" style="margin-left:8px">Next →</button>`;
+    $("#qNext").onclick = () => { quiz.i++; renderQuiz(); };
+    $("#qNext").focus();
+  };
+}
+newQuiz();
+
+/* ---------- library ---------- */
+const H = s => "https://www.hostgator.com/help/article/"+s;
+const lib = [
+  {t:"DNS & domains",aws:"Route 53",items:[
+    ["Changing DNS zones (MX, CNAME, A)",H("how-to-change-dns-zones-mx-cname-and-a-records")],
+    ["Point an existing domain to HostGator",H("how-do-i-point-my-existing-domain-to-hostgator")],
+    ["Transfer a domain to HostGator",H("how-can-i-transfer-my-domain-to-hostgator")],
+    ["Which domain registrations can transfer",H("which-domain-name-registrations-can-i-transfer-to-hostgator")],
+    ["Free domain name transfer",H("free-domain-name-transfer")],
+    ["Transferring away from GoDaddy",H("transferring-away-from-godaddy")],
+    ["Understanding domain registration",H("understanding-domain-registration")],
+    ["Change primary domain: pre-change checklist",H("pre-change-checklist-for-changing-your-primary-domain")],
+    ["Customer portal: change primary domain",H("customer-portal-change-primary-domain")],
+    ["Create a URL redirect",H("url-redirect-how-to-create")],
+    ["The basics of domain redirects","https://www.hostgator.com/blog/basics-domain-redirects/"],
+    ["Connect a third-party domain to Shopify","https://help.shopify.com/en/manual/domains/add-a-domain/connecting-domains"],
+    ["whatsmydns.net (propagation)","https://www.whatsmydns.net/"],
+    ["whois.com lookup","https://www.whois.com/whois/"]]},
+  {t:"Email setup",aws:"WorkMail",items:[
+    ["Generic email client settings",H("generic-email-client-settings")],
+    ["Configuring Outlook",H("configuring-outlook")],
+    ["Email setup for Outlook 2010",H("email-setup-for-outlook-2010")],
+    ["Configuring iPhone/iPad mail",H("configuring-iphone-ipad-mail")],
+    ["Setting up email for the Apple iPhone",H("setting-up-email-for-the-apple-iphone")],
+    ["Mac Mail setup",H("mac-mail-setup")],
+    ["Microsoft 365 email on desktop",H("microsoft-office-365-email-desktop")],
+    ["Microsoft 365 email on mobile",H("microsoft-office-365-email-mobile")],
+    ["Adding Google Workspace",H("adding-google-workspace")],
+    ["Gmailify",H("gmailify")],
+    ["Catch-all email address",H("catchall-email-address-how-to-set")],
+    ["Email disk space",H("how-much-disk-space-do-i-get-for-email")],
+    ["Backing up Roundcube email",H("backing-up-roundcube-email")]]},
+  {t:"Email delivery & errors",aws:"SES",items:[
+    ["Able to send but not receive",H("are-you-able-to-send-emails-but-not-receive")],
+    ["Email bounce-back messages",H("return-messages")],
+    ["What happens to undeliverable email",H("what-will-happen-to-my-undeliverable-emails")],
+    ["Problems with spoof, SPF",H("problems-with-spoof-spf")],
+    ["Mail policy and limits",H("mail-policy-and-limits")],
+    ["Email attachments",H("email-attachments")],
+    ["Outlook error codes",H("outlook-error-codes")],
+    ["Showing email headers in webmail",H("showing-email-headers-in-webmail")],
+    ["Showing email headers in SmarterMail",H("showing-email-headers-in-smartermail")],
+    ["Gmail SMTP errors and codes","https://support.google.com/a/answer/3726730"],
+    ["Fix bounced or rejected emails (Gmail)","https://support.google.com/mail/answer/6596"],
+    ["Prevent mail to Gmail being blocked","https://support.google.com/mail/answer/81126"],
+    ["Google Workspace domain verification","https://support.google.com/a/answer/60216"],
+    ["Authenticate a domain (MailerLite / GoDaddy)","https://www.mailerlite.com/help/how-to-authenticate-a-domain-with-godaddy"],
+    ["MXToolbox blacklist check","https://mxtoolbox.com/SuperTool.aspx?action=blacklist"],
+    ["Spamhaus reputation check","https://check.spamhaus.org/"]]},
+  {t:"Web server & errors",aws:"EC2 + CloudWatch",items:[
+    ["503 Service Unavailable",H("503-service-unavailable-error-message")],
+    ["404 errors after clicking WordPress links",H("404-errors-after-clicking-wordpress-links")],
+    ["Common default .htaccess information",H("common-default-htaccess-information")],
+    ["Default files: .htaccess and php.ini",H("default-files-htaccess-and-php-ini")],
+    ["PHP settings that can't be changed",H("php-settings-that-cannot-be-changed")],
+    ["PHP configuration plugin",H("php-configuration-plugin")],
+    ["Can I change the server clock or time zone?",H("can-i-change-the-server-clock-or-time-zone")],
+    ["Compatible technologies",H("compatible-technologies")],
+    ["What is VPS and VPN",H("what-is-vps-and-vpn-virtual-private-server-network")]]},
+  {t:"SSL & HTTPS",aws:"ACM",items:[
+    ["SSL getting started",H("ssl-getting-started")],
+    ["Get and enable your free SSL",H("hostgator-free-ssl")],
+    ["Purchase an SSL and which type",H("how-do-i-purchase-an-ssl-and-what-type-is-it")],
+    ["SSL with SiteLock CDN",H("how-to-configure-ssl-to-work-with-sitelock-cdn")],
+    ["Redirect HTTP to HTTPS with .htaccess","https://www.freecodecamp.org/news/how-to-redirect-http-to-https-using-htaccess/"],
+    ["Why No Padlock","https://www.whynopadlock.com/"],
+    ["SSL Shopper checker","https://www.sslshopper.com/"]]},
+  {t:"Security",aws:"WAF + GuardDuty",items:[
+    ["My website is infected",H("my-website-is-infected")],
+    ["Server protection measures",H("what-security-measures-are-used-to-protect-my-server")],
+    ["Enable SiteLock SMART/PATCH scan",H("how-to-enable-sitelock-smart-patch-scan")],
+    ["Handle the Google attack page",H("how-to-handle-the-google-attack-page")],
+    ["SSH keys",H("ssh-keys")],
+    ["My script needs 777 permissions",H("my-script-needs-to-use-777-permissions")]]},
+  {t:"WordPress & CMS",aws:"EC2 / Lightsail",items:[
+    ["How to manage Optimized WordPress",H("how-to-manage-optimized-wordpress")],
+    ["Changing the domain of your WordPress site",H("changing-the-domain-of-your-wordpress-site")],
+    ["How to add audio to WordPress",H("how-to-add-mp3-audio-files-in-wordpress")],
+    ["WordPress: Facebook oEmbed change",H("facebook-api-change-ombed")],
+    ["Weebly tutorial walkthrough",H("weebly-tutorial-walkthrough")],
+    ["WHMCS guide",H("whmcs-guide")],
+    ["WHMCS basic problems",H("whmcs-basic-problems")],
+    ["GTmetrix WordPress optimization","https://gtmetrix.com/wordpress-optimization-guide.html"],
+    ["7 ways to speed up your website","https://www.hostgator.com/blog/7-ways-to-speed-up-your-website/"],
+    ["WordPress plugin directory","https://wordpress.org/plugins/"],
+    ["Accept Stripe payments in WordPress","https://www.wpbeginner.com/plugins/how-to-accept-payments-with-stripe-in-wordpress/"],
+    ["Build an online marketplace in WordPress","https://www.wpbeginner.com/wp-tutorials/how-to-create-an-online-marketplace-using-wordpress/"]]},
+  {t:"Files, storage & limits",aws:"S3 / EBS",items:[
+    ["File Manager getting started",H("file-manager-getting-started")],
+    ["Upload a file with File Manager",H("how-to-upload-a-file-using-the-file-manager")],
+    ["Transfer files with FileZilla",H("how-to-transfer-files-with-filezilla")],
+    ["Change your hosts file",H("how-do-i-change-my-hosts-file")],
+    ["Inode limits",H("inode-limits")],
+    ["Inode usage",H("inode-usage")],
+    ["Account limits summary",H("account-limits-summary")],
+    ["Preview a site before switching DNS","https://mediatemple.net/community/products/dv/204643190/how-can-i-test-or-preview-my-website-before-switching-dns"]]},
+  {t:"Databases",aws:"RDS",items:[
+    ["Create or delete a MySQL database or user",H("how-do-i-create-a-mysql-database-a-user-and-then-delete-if-needed")],
+    ["Remotely connect to MySQL",H("how-to-remotely-connect-to-the-mysql-database")]]},
+  {t:"Backups",aws:"AWS Backup",items:[
+    ["How CodeGuard restores work",H("how-codeguard-restores-work")],
+    ["CodeGuard dashboard",H("codeguard-dashboard")],
+    ["Generate and download a full backup",H("how-to-generatedownload-a-full-backup")]]},
+  {t:"Network troubleshooting",aws:"VPC Reachability Analyzer",items:[
+    ["Send a traceroute to HostGator",H("how-can-i-send-a-traceroute-to-hostgator")],
+    ["Running a traceroute (LexisNexis guide)","https://supportcenter.lexisnexis.com/app/answers/answer_view/a_id/1088078/~/running-a-traceroute"],
+    ["Clear your browser cache",H("how-do-i-clear-my-web-browsers-cache")]]},
+  {t:"Billing & account",aws:"Billing & Support",items:[
+    ["Invoicing and automatic billing",H("invoicing-and-automatic-billing")],
+    ["45-day money-back refund",H("how-do-i-get-the-45-day-money-back-refund")],
+    ["Can an existing customer sign up as new?",H("can-an-existing-customer-sign-up-as-a-new-customer")]]}
+];
+function renderLib(){
+  const q = $("#libSearch").value.trim().toLowerCase();
+  let out = "";
+  lib.forEach(g => {
+    const items = g.items.filter(i => !q || (i[0]+" "+g.t+" "+g.aws).toLowerCase().includes(q));
+    if(!items.length) return;
+    out += `<div class="card lib-group"><h3>${esc(g.t)} <span>${items.length}</span></h3><ul>${items.map(i=>`<li><a href="${esc(i[1])}" target="_blank" rel="noopener">${esc(i[0])}</a></li>`).join("")}</ul><div class="aws-tag">ON AWS → ${esc(g.aws)}</div></div>`;
+  });
+  $("#lib").innerHTML = out || `<p class="empty">No articles match "${esc(q)}".</p>`;
+}
+$("#libSearch").addEventListener("input", renderLib);
+renderLib();
+})();
+
+</script>
+</body>
+</html>
