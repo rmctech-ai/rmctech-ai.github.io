@@ -22,7 +22,7 @@ window.HUB = (function () {
   function theme() { let t = 'dark'; try { t = localStorage.getItem('rmc-theme') || 'dark'; } catch (e) {} document.documentElement.dataset.theme = t; }
   function header(active) {
     theme();
-    const links = [['index.html', 'HOME', 'home'], ['exam.html', 'CCP EXAM', 'exam'], ['drill.html', 'SERVICE DRILL', 'drill']];
+    const links = [['index.html', 'HOME', 'home'], ['ccp.html', 'CCP PATH 01–18', 'path'], ['exam.html', 'CCP EXAM', 'exam'], ['drill.html', 'SERVICE DRILL', 'drill']];
     const h = document.createElement('header'); h.className = 'top';
     h.innerHTML = `<a class="brand" href="index.html"><span class="lg">RMC</span><span><b>CLOUD LEARNING HUB</b><small>RAUL · RMCTECH-AI</small></span></a>
       <nav class="nav">${links.map(([u, t, k]) => `<a class="tbtn ${k === active ? 'on' : ''}" href="${u}">${t}</a>`).join('')}<span id="stAnchor"></span><button class="tbtn" id="themeBtn" title="Light / dark">◐</button></nav>`;

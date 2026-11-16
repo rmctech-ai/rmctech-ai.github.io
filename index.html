@@ -17,7 +17,7 @@
       <p class="kicker">CLOUD ENGINEER IN TRAINING → CLOUD SECURITY</p>
       <h1>Hi, I'm Raul. This is my cloud learning lab.</h1>
       <p class="mute">Thirteen interactive courses I study with every week, each with animated diagrams, analogies, memory hooks, quizzes and hands-on labs that run in the browser. Plus a CCP exam simulator, a service drill and a spaced-repetition review deck that collects every question I miss.</p>
-      <div class="btnrow"><a class="btn" href="exam.html">START A CCP PRACTICE EXAM</a><a class="btn gh" href="drill.html">"WHICH SERVICE?" DRILL</a><button class="btn gh" id="revBtn">REVIEW MY MISTAKES</button></div>
+      <div class="btnrow"><a class="btn" href="ccp.html">CCP STUDY PATH 01–18</a><a class="btn gh" href="exam.html">START A CCP PRACTICE EXAM</a><a class="btn gh" href="drill.html">"WHICH SERVICE?" DRILL</a><button class="btn gh" id="revBtn">REVIEW MY MISTAKES</button></div>
     </div>
     <div class="card">
       <p class="kicker">AWS CLOUD PRACTITIONER (CLF-C02)</p>
@@ -45,6 +45,7 @@
 
   <h2>PRACTICE FOR THE EXAM</h2>
   <div class="grid g3">
+    <a class="card course" href="ccp.html" style="border-color:var(--blue)"><div class="hd"><span class="em">🧭</span><div><h3>CCP Study Path 01–18</h3><div class="n">18 MODULES · 4 LABS · GLOSSARY</div></div></div><p class="mute" style="margin:0">One numbered path in exam-guide order: must-know facts, exam traps, "I can…" checklists, free-tier labs, the 20 most common mistakes and an exam-eve checklist.</p><div class="bar"><i id="ccpBar" style="width:0%"></i></div></a>
     <a class="card course" href="exam.html"><div class="hd"><span class="em">📝</span><div><h3>CCP Exam Simulator</h3><div class="n">CLF-C02 · 4 DOMAINS</div></div></div><p class="mute" style="margin:0">65 questions in 90 minutes, weighted like the real exam, with flag-for-review, a domain breakdown and an explanation for every option. Quick and domain modes too.</p><div class="meta"><span id="exHist">No attempts yet</span><span>→</span></div></a>
     <a class="card course" href="drill.html"><div class="hd"><span class="em">⚡</span><div><h3>"Which service?" Drill</h3><div class="n">99 SCENARIOS · 15 S EACH</div></div></div><p class="mute" style="margin:0">A use case appears; pick the AWS service before the timer runs out. Builds the instant recall the CCP rewards.</p><div class="meta"><span id="drBest">No best score yet</span><span>→</span></div></a>
     <div class="card course" id="revCard" style="cursor:pointer"><div class="hd"><span class="em">📚</span><div><h3>My Mistakes</h3><div class="n">SPACED REPETITION</div></div></div><p class="mute" style="margin:0">Every question you miss in any course quiz or the simulator. Due questions come back after 1 day, then 3 days, until you've answered them right 3 times.</p><div class="meta"><span id="revTxt">0 saved</span><span>→</span></div></div>
@@ -84,5 +85,6 @@ HUB.header('home');
   document.getElementById('revBtn').onclick = document.getElementById('revCard').onclick = () => STUDY.review(false);
 })();
 </script>
+<script>try{const s=JSON.parse(localStorage.getItem("rmc-ccp-path")||"{}");const n=Object.values(s).filter(Boolean).length;document.getElementById("ccpBar").style.width=Math.round(n/62*100)+"%";}catch(e){}</script>
 </body>
 </html>

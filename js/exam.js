@@ -133,5 +133,5 @@
     else if (e.key === 'Enter' && S.fb) { e.preventDefault(); const cb = $('#chkBtn'); if (cb && !cb.disabled) cb.click(); else if (q.locked) S.cur < S.qs.length - 1 ? go(S.cur + 1) : finish(); }
   });
   window.addEventListener('beforeunload', e => { if (S && !S.done && S.qs.some(answered)) { e.preventDefault(); e.returnValue = ''; } });
-  home();
+  { const m = /domain=(\w+)/.exec(location.hash); if (m && DOM[m[1]]) start('domain', m[1]); else home(); }
 })();
