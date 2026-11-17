@@ -7,8 +7,10 @@
     full: { name: 'Full practice exam', n: 65, min: 90, fb: false, desc: '65 questions · 90 minutes · weighted like CLF-C02 · results at the end' },
     half: { name: 'Half exam', n: 30, min: 42, fb: false, desc: '30 questions · 42 minutes · same weighting · results at the end' },
     quick: { name: 'Quick 10', n: 10, min: 0, fb: true, desc: '10 questions · untimed · instant feedback after each answer' },
-    domain: { name: 'Domain practice', n: 20, min: 0, fb: true, desc: '20 questions from one domain · untimed · instant feedback' }
+    domain: { name: 'Domain practice', n: 20, min: 0, fb: true, desc: '20 questions from one domain · untimed · instant feedback' },
+    mock: { name: 'Mock exam', n: 65, min: 90, fb: false, desc: 'A fixed 65-question exam · 90 minutes · results at the end' }
   };
+  const MOCKS = window.MOCK_SETS || [];
   const db = () => { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { return {}; } };
   const save = d => { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {} };
   const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -17,10 +19,12 @@
   /* ---------- pick questions (least-seen first, domain-weighted) ---------- */
   function pick(mode, dom) {
     const seen = db().seen || {}; const by = {};
-    EXAM.forEach((q, i) => (by[q[0]] = by[q[0]] || []).push(i));
+    const inMock = i => MOCKS.some(m => i >= m.start && i < m.start + m.count);
+    EXAM.forEach((q, i) => { if (!inMock(i)) (by[q[0]] = by[q[0]] || []).push(i); });
     const take = (d, n) => shuffle(by[d]).sort((a, b) => (seen[a] || 0) - (seen[b] || 0)).slice(0, n);
     let ids;
-    if (mode === 'domain') ids = take(dom, MODES.domain.n);
+    if (mode === 'mock') { const m = MOCKS.find(x => x.n === +dom); ids = Array.from({ length: m.count }, (_, k) => m.start + k); }
+    else if (mode === 'domain') ids = take(dom, MODES.domain.n);
     else { const n = MODES[mode].n; const counts = {}; let tot = 0; Object.entries(DOM).forEach(([d, [, w]]) => { counts[d] = Math.round(n * w); tot += counts[d]; }); counts.tech += n - tot; ids = Object.keys(counts).flatMap(d => take(d, counts[d])); }
     return shuffle(ids).map(i => { const q = EXAM[i]; const order = shuffle(q[2].map((_, j) => j)); const multi = Array.isArray(q[3]);
       return { i, d: q[0], q: q[1], a: order.map(j => q[2][j]), w: order.map(j => q[5][j]), c: multi ? q[3].map(k => order.indexOf(k)).sort() : order.indexOf(q[3]), multi, need: multi ? q[3].length : 1, why: q[4], ans: null, flag: false }; });
@@ -31,9 +35,17 @@
     clearInterval(tick); S = null; const d = db(); const h = (d.history || []).slice(-8).reverse();
     app.innerHTML = `<p class="kicker">AWS CERTIFIED CLOUD PRACTITIONER · CLF-C02</p><h1>CCP Exam Simulator</h1>
       <p class="mute">${EXAM.length} original practice questions across the four exam domains, each with an explanation for the right answer and for every wrong one. Options are shuffled every time, and questions you've seen least come first. Missed questions go to your <b>My Mistakes</b> deck.</p>
-      <div class="grid g2" style="margin-top:16px">${Object.entries(MODES).map(([k, m]) => `<div class="card"><h3>${m.name}</h3><p class="mute" style="margin:4px 0 10px;font-size:12px">${m.desc}</p>
+      <div class="grid g2" style="margin-top:16px">${Object.entries(MODES).filter(([k]) => k !== 'mock').map(([k, m]) => `<div class="card"><h3>${m.name}</h3><p class="mute" style="margin:4px 0 10px;font-size:12px">${m.desc}</p>
         ${k === 'domain' ? `<div class="seg" id="domSeg">${Object.entries(DOM).map(([dk, [dn]], i) => `<button data-d="${dk}" class="${i ? '' : 'on'}">${dn}</button>`).join('')}</div>` : ''}
         <div class="btnrow"><button class="btn" data-m="${k}">START</button></div></div>`).join('')}</div>
+      ${MOCKS.length ? `<h2>MOCK EXAMS</h2><p class="mute" style="margin-top:-6px">Three fixed, full-length exams written for this hub (${MOCKS.length * 65} questions, kept separate from the ${MOCKS[0].start}-question random pool so they stay fresh). Same questions every attempt (options shuffled), so you can measure progress. Aim for 800+ on each.</p>
+      <div class="grid g3">${MOCKS.map(m => { const best = (d.history || []).filter(x => x.label === `Mock exam ${m.n}`).reduce((a, x) => Math.max(a, x.score), -1); return `<div class="card"><h3>Mock exam ${m.n}</h3><p class="mute" style="margin:4px 0 10px;font-size:12px">${m.count} questions · 90 minutes · ${['core concepts', 'broader services', 'harder scenarios'][m.n - 1] || ''}${best >= 0 ? ` · best <b style="color:${best >= 800 ? 'var(--green)' : best >= 700 ? 'var(--amber)' : 'var(--red)'}">${best}</b>` : ''}</p><div class="btnrow"><button class="btn" data-mock="${m.n}">START MOCK ${m.n}</button></div></div>`; }).join('')}</div>` : ''}
+      <h2>THE REAL THING: OFFICIAL AWS PRACTICE</h2>
+      <div class="grid g3">
+        <a class="card course" href="https://training.resources.awscloud.com/associate-certification-articles/updated-cloud-practitioner-exam-prep-course" target="_blank" rel="noopener"><h3>Official Practice Question Set ↗</h3><p class="mute" style="margin:4px 0 0;font-size:12px">20 questions written by AWS, with feedback. On AWS Skill Builder.</p></a>
+        <a class="card course" href="https://training.resources.awscloud.com/associate-certification-articles/exam-prep-official-pretest-aws-certified-cloud-practitioner-clf-c02" target="_blank" rel="noopener"><h3>Official Pretest ↗</h3><p class="mute" style="margin:4px 0 0;font-size:12px">65 questions · 90 minutes · full-length, by AWS. On AWS Skill Builder.</p></a>
+        <a class="card course" href="https://training.resources.awscloud.com/associate-certification-articles/updated-cloud-practitioner-clf-c02-practice-exam" target="_blank" rel="noopener"><h3>Official Practice Exam ↗</h3><p class="mute" style="margin:4px 0 0;font-size:12px">AWS's own practice exam. Needs a Skill Builder subscription.</p></a>
+      </div>
       <h2>EXAM FACTS</h2><div class="grid g4">
         <div class="card"><b>65 questions</b><div class="mute" style="font-size:12px">50 scored + 15 unscored; you can't tell which</div></div>
         <div class="card"><b>90 minutes</b><div class="mute" style="font-size:12px">~83 seconds per question</div></div>
@@ -42,11 +54,12 @@
       ${h.length ? `<h2>YOUR LAST ATTEMPTS</h2><div class="card"><table class="hist"><tr><th>DATE</th><th>MODE</th><th>SCORE</th><th>CORRECT</th><th>TIME</th><th>RESULT</th></tr>${h.map(x => `<tr><td>${new Date(x.at).toLocaleString()}</td><td>${esc(x.label)}</td><td><b>${x.score}</b></td><td>${x.right}/${x.n}</td><td>${Math.round(x.secs / 60)} min</td><td class="${x.score >= 700 ? 'pass' : 'fail'}">${x.score >= 700 ? 'PASS' : 'NOT YET'}</td></tr>`).join('')}</table></div>` : ''}`;
     let dom = 'concepts'; const seg = $('#domSeg'); seg.querySelectorAll('button').forEach(b => b.onclick = () => { dom = b.dataset.d; seg.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); });
     app.querySelectorAll('[data-m]').forEach(b => b.onclick = () => start(b.dataset.m, dom));
+    app.querySelectorAll('[data-mock]').forEach(b => b.onclick = () => start('mock', b.dataset.mock));
   }
 
   /* ---------- run ---------- */
   function start(mode, dom) {
-    const m = MODES[mode]; S = { mode, dom, label: mode === 'domain' ? `Domain: ${DOM[dom][0]}` : m.name, fb: m.fb, qs: pick(mode, dom), cur: 0, t0: Date.now(), end: m.min ? Date.now() + m.min * 60000 : 0, done: false };
+    const m = MODES[mode]; S = { mode, dom, label: mode === 'domain' ? `Domain: ${DOM[dom][0]}` : mode === 'mock' ? `Mock exam ${dom}` : m.name, fb: m.fb, qs: pick(mode, dom), cur: 0, t0: Date.now(), end: m.min ? Date.now() + m.min * 60000 : 0, done: false };
     clearInterval(tick); if (S.end) tick = setInterval(timer, 500); render(); window.scrollTo(0, 0);
   }
   function timer() { if (!S || S.done) return; const left = Math.max(0, S.end - Date.now()); const el = $('#tm'); if (el) { const mm = Math.floor(left / 60000), ss = Math.floor(left / 1000) % 60; el.textContent = `${mm}:${String(ss).padStart(2, '0')}`; el.classList.toggle('low', left < 300000); } if (!left) { HUB.toast('Time is up! Submitting.'); finish(); } }
@@ -133,5 +146,5 @@
     else if (e.key === 'Enter' && S.fb) { e.preventDefault(); const cb = $('#chkBtn'); if (cb && !cb.disabled) cb.click(); else if (q.locked) S.cur < S.qs.length - 1 ? go(S.cur + 1) : finish(); }
   });
   window.addEventListener('beforeunload', e => { if (S && !S.done && S.qs.some(answered)) { e.preventDefault(); e.returnValue = ''; } });
-  { const m = /domain=(\w+)/.exec(location.hash); if (m && DOM[m[1]]) start('domain', m[1]); else home(); }
+  { const m = /domain=(\w+)/.exec(location.hash), k = /mock=(\d)/.exec(location.hash); if (m && DOM[m[1]]) start('domain', m[1]); else if (k && MOCKS.some(x => x.n === +k[1])) start('mock', k[1]); else home(); }
 })();

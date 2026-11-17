@@ -182,8 +182,8 @@
       'Test center: arrive 30 minutes early with a valid, unexpired government photo ID whose name <b>exactly matches</b> your AWS Certification account. Check your confirmation email for the center\'s rules.',
       'Read the last sentence first, find the keyword (cheapest, least effort, most secure), eliminate, then pick the most managed option that meets every requirement. Flag and return; don\'t get stuck.'],
     traps: ['Name mismatch between ID and account can get you turned away — check it this week.', 'Don\'t cram new topics the night before: run the checklist below, then sleep.'],
-    links: [['CCP Exam Simulator', 'exam.html'], ['"Which service?" Drill', 'drill.html'], ['Service Field Guide · Quiz', FG + 'quiz'], ['Field Guide · Exam traps', FG + 'traps'], ['Architecture Atlas', ATLAS]],
-    checks: ['My ID name matches my AWS Certification account', 'I decided about ESL +30', 'I scored 80%+ on two full practice exams', 'I reviewed every mistake in the review deck', 'I know the route and timing to the test center'] }
+    links: [['Mock exam 1', 'exam.html#mock=1'], ['Mock exam 2', 'exam.html#mock=2'], ['Mock exam 3', 'exam.html#mock=3'], ['Official AWS Practice Question Set ↗', 'https://training.resources.awscloud.com/associate-certification-articles/updated-cloud-practitioner-exam-prep-course'], ['Official AWS Pretest ↗', 'https://training.resources.awscloud.com/associate-certification-articles/exam-prep-official-pretest-aws-certified-cloud-practitioner-clf-c02'], ['CCP Exam Simulator', 'exam.html'], ['"Which service?" Drill', 'drill.html'], ['Service Field Guide · Quiz', FG + 'quiz'], ['Field Guide · Exam traps', FG + 'traps'], ['Architecture Atlas', ATLAS]],
+    checks: ['My ID name matches my AWS Certification account', 'I decided about ESL +30', 'I scored 800+ on all three mock exams', 'I took the official AWS practice questions or pretest', 'I reviewed every mistake in the review deck', 'I know the route and timing to the test center'] }
   ];
 
   const MISTAKES = [
