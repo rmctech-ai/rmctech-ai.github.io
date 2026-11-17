@@ -10,7 +10,7 @@ My home base for learning cloud engineering, on the way from AWS Cloud Practitio
 |---|---|
 | 🏠 **Home** | All 13 Explorer courses with live progress (read from your browser), CCP countdown, stats and roadmap |
 | 🧭 **CCP Study Path 01–18** | 18 numbered modules in exam-guide order (must-know facts, exam traps, links into every resource, "I can…" checklists), 4 free-tier labs, the 20 most common mistakes, a glossary and an exam-eve checklist. Progress is saved in the browser. |
-| 📝 **CCP Exam Simulator** | 174 original CLF-C02-style questions across the 4 domains. Full exam (65 Q / 90 min, domain-weighted), half exam, quick 10 and domain practice. Flag for review, timer, domain breakdown, and an explanation for **every** option. Options are shuffled each attempt and least-seen questions come first. |
+| 📝 **CCP Exam Simulator** | 190 original CLF-C02-style questions across the 4 domains. Full exam (65 Q / 90 min, domain-weighted), half exam, quick 10 and domain practice. Flag for review, timer, domain breakdown, and an explanation for **every** option. Options are shuffled each attempt and least-seen questions come first. |
 | ⚡ **"Which service?" Drill** | 99 real-world scenarios, 108 AWS services, 15 seconds per round, same-category distractors, streak bonuses and a searchable service cheat sheet |
 | 📚 **My Mistakes** | A spaced-repetition deck shared by the hub **and all 13 courses**: every missed question comes back after 1 day and 3 days until it's answered right 3 times |
 

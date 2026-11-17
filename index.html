@@ -85,6 +85,6 @@ HUB.header('home');
   document.getElementById('revBtn').onclick = document.getElementById('revCard').onclick = () => STUDY.review(false);
 })();
 </script>
-<script>try{const s=JSON.parse(localStorage.getItem("rmc-ccp-path")||"{}");const n=Object.values(s).filter(Boolean).length;document.getElementById("ccpBar").style.width=Math.round(n/62*100)+"%";}catch(e){}</script>
+<script>try{const s=JSON.parse(localStorage.getItem("rmc-ccp-path")||"{}");const n=Object.values(s).filter(Boolean).length;document.getElementById("ccpBar").style.width=Math.round(n/(+localStorage.getItem("rmc-ccp-total")||62)*100)+"%";}catch(e){}</script>
 </body>
 </html>

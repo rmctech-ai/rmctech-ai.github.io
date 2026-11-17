@@ -14,10 +14,12 @@
       'The <b>six advantages</b>: trade fixed expense (CapEx) for variable expense (OpEx) · benefit from massive economies of scale · stop guessing capacity · increase speed and agility · stop spending money running and maintaining data centers · go global in minutes.',
       '<b>Elasticity</b> = automatically grow AND shrink with demand. <b>Scalability</b> = ability to grow (up or out). <b>High availability</b> = keeps running when parts fail (multiple AZs). <b>Fault tolerance</b> = no interruption at all.',
       'Service models: <b>IaaS</b> (EC2: you manage the OS), <b>PaaS</b> (Elastic Beanstalk: you manage the code), <b>SaaS</b> (a finished app like WorkSpaces or Amazon Connect).',
-      'Deployment models: <b>cloud</b> (all-in), <b>on-premises / private</b>, <b>hybrid</b> (both, connected).'],
+      'Deployment models: <b>cloud</b> (all-in), <b>on-premises / private</b>, <b>hybrid</b> (both, connected).',
+      'The <b>five characteristics</b> of cloud computing: on-demand self-service · broad network access · multi-tenancy and resource pooling · rapid elasticity and scalability · measured service (pay for what you use).',
+      '<b>Agility</b> = new IT resources are a click away, so experiments take minutes instead of weeks. (Not the same as elasticity or scalability.)'],
     traps: ['"Stop guessing capacity" vs "economies of scale": the first is about planning, the second is about lower prices.', 'High availability ≠ high performance. Multi-AZ is about staying up, not going faster.', 'Elasticity includes scaling <i>in</i>. If the question says "removes servers when traffic drops", it is elasticity.'],
     links: [['AWS City Map', CITY], ['Well-Architected Explorer · Scalability', EX('WellArchitected-Explorer', 'scalability')]],
-    checks: ['I can name all six advantages of cloud computing', 'I can explain elasticity vs scalability vs high availability', 'I can match IaaS / PaaS / SaaS to an AWS example'] },
+    checks: ['I can name all six advantages and the five characteristics of cloud computing', 'I can explain elasticity vs scalability vs high availability', 'I can match IaaS / PaaS / SaaS to an AWS example'] },
 
   { n: '02', t: 'Global Infrastructure', d: 'concepts', min: 35,
     know: ['<b>Region</b> = a geographic area with <b>3 or more Availability Zones</b>. Choose a Region by: compliance/data residency, latency to users, service availability, price.',
@@ -34,7 +36,7 @@
       'CAF transformation journey phases: <b>Envision → Align → Launch → Scale</b>.',
       'Business outcomes CAF targets: <b>reduced business risk, improved ESG performance, increased revenue, increased operational efficiency</b>.',
       'Migration strategies (the <b>7 Rs</b>): Retire, Retain, Relocate, Rehost (lift and shift), Replatform (lift, tinker and shift), Repurchase (move to SaaS), Refactor (re-architect).',
-      'Tools: <b>Migration Evaluator</b> (business case), <b>Application Discovery Service</b> (inventory), <b>Migration Hub</b> (track), <b>Application Migration Service</b> (rehost servers), <b>DMS + SCT</b> (databases), <b>Snow Family</b> and <b>DataSync</b> (data).'],
+      'Tools: <b>Migration Evaluator</b> (business case), <b>Application Discovery Service</b> (inventory; closed to new customers since Nov 2025 but still in the exam guide), <b>Migration Hub</b> (track), <b>Application Migration Service</b> (rehost servers), <b>DMS + SCT</b> (databases), <b>Snow Family</b> and <b>DataSync</b> (data).'],
     traps: ['People perspective = training, culture, org structure. Governance = program management, risk, cost. Platform = architecture. Operations = run and support.', 'Rehost changes nothing; replatform makes a small change (e.g. self-managed DB → RDS); refactor rebuilds.', 'Same DB engine → DMS only. Different engine → SCT first, then DMS.'],
     links: [...fg('mgn dms sct ads evaluator migrationhub snow'), ['SAA Explorer · Migration', EX('SAA-Explorer', 'migration')]],
     checks: ['I can name the 6 CAF perspectives and which are business vs technical', 'I can list the 4 CAF phases in order', 'I can match the 7 Rs to examples', 'I know which tool does discovery, server migration and DB migration'] },
@@ -61,16 +63,18 @@
       '<b>IAM users</b> (people/apps with long-term credentials), <b>groups</b> (attach policies to many users), <b>roles</b> (temporary credentials for services, apps and other accounts), <b>policies</b> (JSON permissions).',
       '<b>Least privilege</b>: grant only what is needed. Explicit <b>Deny</b> always wins.',
       '<b>IAM Identity Center</b> = single sign-on for the workforce across accounts. <b>Cognito</b> = sign-in for your app\'s customers. <b>Directory Service</b> = managed Microsoft AD.',
+      '<b>IAM security tools</b>: <b>Credential Report</b> (account level: all users and the status of their passwords, keys and MFA) and <b>Access Advisor</b> (user level: which services they were granted and when they last used them, so you can remove unused permissions). A <b>password policy</b> sets minimum length, character types, expiry and reuse rules.',
       '<b>Organizations</b>: many accounts, <b>consolidated billing</b>, <b>SCPs</b> (maximum permissions per account/OU). <b>Control Tower</b> sets up a governed multi-account landing zone. <b>RAM</b> shares resources across accounts.'],
-    traps: ['EC2 needs to call S3 → give the instance an <b>IAM role</b>, never access keys.', 'SCPs limit, they never grant permissions.', 'Cognito is for customers of your app; Identity Center is for employees.'],
+    traps: ['EC2 needs to call S3 → give the instance an <b>IAM role</b>, never access keys.', 'SCPs limit, they never grant permissions.', 'Audit every user\'s credentials in one file → Credential Report. Find unused permissions for one user → Access Advisor.', 'Cognito is for customers of your app; Identity Center is for employees.'],
     links: [['IAM Explorer (whole course)', EX('IAM-Explorer')], ...fg('iam identitycenter cognito organizations controltower ram')],
-    checks: ['I know the root user best practices', 'I can explain user vs group vs role', 'I know when to use Identity Center vs Cognito', 'I know what an SCP does and does not do'] },
+    checks: ['I know the root user best practices', 'I can explain user vs group vs role', 'I know when to use Identity Center vs Cognito', 'I know what an SCP does and does not do', 'I know Credential Report vs Access Advisor'] },
 
   { n: '07', t: 'Security Services', d: 'security', min: 50,
     know: ['<b>Shield</b> = DDoS protection (Standard free and automatic; Advanced paid with response team). <b>WAF</b> = layer-7 web filtering (SQL injection, XSS, rate limits). <b>Firewall Manager</b> = manage WAF/Shield/SG rules across accounts.',
       '<b>GuardDuty</b> = threat detection from logs (malicious IPs, crypto-mining). <b>Inspector</b> = vulnerability scanning (EC2, ECR images, Lambda). <b>Macie</b> = find PII in S3. <b>Detective</b> = investigate root cause. <b>Security Hub</b> = one dashboard of findings.',
       '<b>KMS</b> = managed encryption keys. <b>CloudHSM</b> = your own dedicated hardware security module. <b>Secrets Manager</b> = store and <b>rotate</b> secrets. <b>ACM</b> = free TLS certificates.',
-      'Encryption <b>at rest</b> (KMS) and <b>in transit</b> (TLS/ACM).'],
+      'Encryption <b>at rest</b> (KMS) and <b>in transit</b> (TLS/ACM).',
+      'KMS key types: <b>customer managed</b> (you create, control policy and rotation) · <b>AWS managed</b> (created for you per service, e.g. aws/s3) · <b>AWS owned</b> (used by AWS across many accounts; you never see them). Old notes call these "CMKs".'],
     traps: ['Inspector finds weaknesses; GuardDuty detects active threats.', 'Shield = DDoS; WAF = malicious web requests.', 'Dedicated, single-tenant key hardware or FIPS 140-3 level 3 → CloudHSM, not KMS.'],
     links: [['Cloud Security Explorer · Detection services', EX('CloudSecurity-Explorer', 'detection-services')], ...fg('shield waf firewallmanager guardduty inspector macie detective securityhub kms cloudhsm secretsmanager acm')],
     checks: ['I can match GuardDuty, Inspector, Macie, Detective and Security Hub to a scenario', 'I know Shield vs WAF', 'I know KMS vs CloudHSM vs Secrets Manager'] },
@@ -79,15 +83,19 @@
     know: ['<b>AWS Artifact</b> = download AWS\'s own compliance reports (SOC, PCI, ISO) and agreements.',
       '<b>CloudTrail</b> = who did what, when (API calls). <b>AWS Config</b> = what changed and is it compliant (resource configuration history + rules). <b>Audit Manager</b> = collect evidence for audits.',
       '<b>Compliance programs</b> (PCI DSS, HIPAA, GDPR, ISO 27001, SOC) — AWS is certified for its part; you must still configure your workload correctly.',
+      '<b>CloudTrail</b> keeps <b>90 days</b> of management events in Event history for free; send a trail to S3 for longer. <b>CloudTrail Insights</b> flags unusual API activity (e.g. a sudden burst of resource creation).',
+      '<b>Penetration testing</b>: you may test your own resources on many common services (EC2, RDS, Aurora, CloudFront, API Gateway, Lambda, Lightsail, Beanstalk…) without asking first. Not allowed: DoS/DDoS attacks, flooding, attacking AWS infrastructure itself. DDoS simulation only through an approved partner.',
       'Resources: <b>AWS Security Center</b>, <b>Trust & Safety team</b> (report abuse), <b>Knowledge Center</b>, security blogs.'],
-    traps: ['Artifact gives AWS\'s reports; it does not check your resources (that\'s Config / Audit Manager).', 'Audit "who deleted the bucket?" → CloudTrail, not CloudWatch.', 'Report AWS resources used for abuse (spam, attacks) → AWS Trust & Safety.'],
+    traps: ['Artifact gives AWS\'s reports; it does not check your resources (that\'s Config / Audit Manager).', 'Audit "who deleted the bucket?" → CloudTrail, not CloudWatch.', 'Report AWS resources used for abuse (spam, attacks) → AWS Trust & Safety.', '"Can I run a vulnerability scan on my own EC2 without permission?" → yes. "Can I DoS-test my site myself?" → no.'],
     links: [['IAM Explorer · CloudTrail audit', EX('IAM-Explorer', 'cloudtrail-audit')], ['Cloud Security Explorer · Config compliance', EX('CloudSecurity-Explorer', 'config-compliance')], ...fg('artifact cloudtrail config auditmanager')],
-    checks: ['I know CloudTrail vs Config vs CloudWatch', 'I know what Artifact is for', 'I know how to report abuse'] },
+    checks: ['I know CloudTrail vs Config vs CloudWatch', 'I know what Artifact is for', 'I know how to report abuse', 'I know what penetration testing is allowed without approval'] },
 
   { n: '09', t: 'Compute', d: 'tech', min: 60,
     know: ['<b>EC2</b> families: general purpose (M, T), compute optimized (C), memory optimized (R, X), storage optimized (I, D), accelerated (P, G).',
       '<b>User data</b> = a script that runs at first boot (install a web server). <b>Instance metadata</b> = info the instance can read about itself at 169.254.169.254 (instance ID, role credentials).',
       'Purchase options: <b>On-Demand</b> (no commitment), <b>Savings Plans</b> and <b>Reserved Instances</b> (1 or 3 years, up to ~72% off), <b>Spot</b> (up to 90% off, can be interrupted), <b>Dedicated Hosts</b> (licensing / compliance), <b>Dedicated Instances</b>, <b>Capacity Reservations</b>.',
+      '<b>AMI</b> (Amazon Machine Image) = the template an instance boots from: AWS-provided, your own (custom, faster boot with software pre-installed) or from the Marketplace. AMIs are per Region but can be copied. Connect without SSH keys or open port 22 using <b>EC2 Instance Connect</b> or Systems Manager <b>Session Manager</b>.',
+      'Auto Scaling policies: target tracking (keep CPU at 40%), simple/step, <b>scheduled</b> (known events), <b>predictive</b> (ML forecasts the load).',
       '<b>Auto Scaling</b> adds/removes instances; <b>Elastic Load Balancing</b> (ALB for HTTP, NLB for TCP/UDP, GWLB for appliances) spreads traffic and checks health.',
       'Serverless and containers: <b>Lambda</b> (events, max 15 min), <b>Fargate</b> (serverless containers), <b>ECS</b>, <b>EKS</b> (Kubernetes), <b>ECR</b> (images). Easy options: <b>Elastic Beanstalk</b> (PaaS), <b>Lightsail</b> (simple fixed-price VPS). <b>Batch</b> for batch jobs.'],
     traps: ['Steady 24/7 for a year → Savings Plan / RI. Interruptible → Spot. Bring your own per-socket license → Dedicated Host.', 'Lambda can\'t run longer than 15 minutes.', 'Simplest website for a beginner with fixed monthly price → Lightsail.'],
@@ -98,6 +106,8 @@
     know: ['<b>S3</b> = object storage, 11 nines durability, buckets and objects, static websites, <b>versioning</b>, <b>lifecycle rules</b>, Transfer Acceleration, Block Public Access.',
       'S3 classes: Standard · Intelligent-Tiering (unknown patterns) · Standard-IA · One Zone-IA · Glacier Instant Retrieval · Glacier Flexible Retrieval · Glacier Deep Archive (cheapest, hours to retrieve).',
       '<b>EBS</b> = block disk for one EC2 instance in one AZ (snapshots to back up). <b>Instance store</b> = temporary local disk. <b>EFS</b> = shared Linux file system (NFS). <b>FSx</b> = Windows File Server, Lustre (HPC), NetApp ONTAP, OpenZFS.',
+      'EBS <b>Delete on Termination</b>: the root volume is deleted with the instance by default; extra volumes are kept by default. <b>EFS-IA</b> = cheaper EFS tier for files not used every day (lifecycle moves them).',
+      'S3 <b>Cross-Region Replication</b> copies objects to a bucket in another Region (compliance, low-latency reads in a few Regions). CloudFront instead <b>caches</b> content at edge locations worldwide.',
       '<b>Storage Gateway</b> = hybrid access to cloud storage. <b>Snow Family</b> = physical devices for big offline transfers / edge. <b>AWS Backup</b> = central backups. <b>Elastic Disaster Recovery</b> = replicate servers for DR.'],
     traps: ['Versioning keeps old copies; lifecycle moves or deletes objects over time.', 'Archive classes are cheap to store but charge to retrieve and take time.', 'S3 is not an instance disk; EBS is.'],
     links: [['SAA Explorer · Storage', EX('SAA-Explorer', 'storage')], ...fg('s3 glacier ebs efs fsx storagegateway snow backup drs')],
@@ -116,10 +126,12 @@
     know: ['<b>VPC</b> = your private network. <b>Subnets</b> live in one AZ; public subnets route to an <b>Internet Gateway</b>; private subnets use a <b>NAT gateway</b> to go out.',
       '<b>Security groups</b> = stateful, allow-only, on instances. <b>Network ACLs</b> = stateless, allow and deny, on subnets.',
       'Connect networks: <b>VPC peering</b> (two VPCs), <b>Transit Gateway</b> (hub for many), <b>Site-to-Site VPN</b> (encrypted over internet, fast to set up), <b>Direct Connect</b> (private dedicated line), <b>Client VPN</b> (laptops), <b>PrivateLink</b> (private access to services).',
+      '<b>NAT gateway</b> (managed, highly available in its AZ, scales automatically) vs <b>NAT instance</b> (an EC2 you manage yourself, old way). <b>Elastic IP</b> = a fixed public IPv4 address you own until you release it (charged).',
+      'Ports to know: <b>22</b> SSH (Linux login, also SFTP) · <b>21</b> FTP · <b>80</b> HTTP · <b>443</b> HTTPS · <b>3389</b> RDP (Windows login).',
       '<b>Route 53</b> = DNS + routing policies + health checks. <b>CloudFront</b> = CDN caching at edge locations. <b>Global Accelerator</b> = static IPs over the AWS backbone. <b>API Gateway</b> = managed APIs.'],
     traps: ['Block one IP address → NACL (security groups can\'t deny).', 'Need it fast + encrypted → VPN. Consistent private bandwidth → Direct Connect.', 'Cache content near users → CloudFront. Static IP / non-HTTP → Global Accelerator.'],
     links: [['VPC Explorer (whole course)', EX('VPC-Explorer')], ...fg('vpc route53 cloudfront globalaccelerator apigateway directconnect vpn clientvpn transitgateway privatelink')],
-    checks: ['I know public vs private subnet', 'I know security group vs NACL', 'I can pick VPN vs Direct Connect vs Transit Gateway', 'I know CloudFront vs Global Accelerator'] },
+    checks: ['I know ports 22, 80, 443 and 3389', 'I know public vs private subnet', 'I know security group vs NACL', 'I can pick VPN vs Direct Connect vs Transit Gateway', 'I know CloudFront vs Global Accelerator'] },
 
   { n: '13', t: 'Application Integration & Analytics', d: 'tech', min: 40,
     know: ['<b>SQS</b> = message queue (decouple, buffer). <b>SNS</b> = publish/subscribe notifications (fan-out, email, SMS). <b>EventBridge</b> = event bus and schedules. <b>Step Functions</b> = workflows.',
@@ -131,7 +143,8 @@
   { n: '14', t: 'AI/ML & Other In-Scope Services', d: 'tech', min: 40,
     know: ['<b>SageMaker AI</b> = build, train, deploy your own ML models. <b>Bedrock</b> = generative AI foundation models via API. <b>Amazon Q</b> = generative AI assistant for work and developers.',
       'Ready-made AI: <b>Rekognition</b> (images/video), <b>Textract</b> (extract text and forms from documents), <b>Comprehend</b> (sentiment, entities in text), <b>Transcribe</b> (speech → text), <b>Polly</b> (text → speech), <b>Translate</b>, <b>Lex</b> (chatbots), <b>Kendra</b> (intelligent enterprise search).',
-      'Business apps: <b>Amazon Connect</b> (contact center), <b>SES</b> (email). End-user computing: <b>WorkSpaces</b> (virtual desktops), <b>AppStream 2.0</b> (stream apps), <b>WorkSpaces Secure Browser</b>. Front end: <b>Amplify</b>, <b>AppSync</b> (GraphQL). IoT: <b>IoT Core</b>.'],
+      'Business apps: <b>Amazon Connect</b> (contact center), <b>SES</b> (email). End-user computing: <b>WorkSpaces</b> (virtual desktops), <b>AppStream 2.0</b> (stream apps), <b>WorkSpaces Secure Browser</b>. Front end: <b>Amplify</b>, <b>AppSync</b> (GraphQL). IoT: <b>IoT Core</b>.',
+      'Also seen in notes and questions: <b>Ground Station</b> (control satellites, ground station as a service) · <b>Device Farm</b> (test mobile/web apps on real devices) · <b>Fault Injection Service (FIS)</b> (chaos engineering: inject failures on purpose) · <b>Elemental MediaConvert</b> (video transcoding) · <b>Managed Blockchain</b> · <b>CodeGuru Profiler</b> (find slow, costly lines of code) · <b>Snow Family OpsHub</b> (app to manage Snow devices).'],
     traps: ['Polly speaks, Transcribe listens.', 'Textract reads documents; Rekognition looks at images; Comprehend understands text.', 'Your own custom model → SageMaker. Ready foundation model → Bedrock.'],
     links: [...fg('sagemaker bedrock q rekognition textract comprehend transcribe polly translate lex kendra connect ses workspaces appstream securebrowser amplify appsync iotcore')],
     checks: ['I can match every AI service to its input (image, text, speech, document)', 'I know SageMaker vs Bedrock vs Q', 'I know WorkSpaces vs AppStream 2.0'] },
@@ -140,6 +153,7 @@
     know: ['<b>CloudWatch</b> = metrics, logs, alarms, dashboards. <b>AWS Health Dashboard</b> = AWS service events that affect you. <b>Trusted Advisor</b> = best-practice checks (cost, security, performance, fault tolerance, service limits, operational excellence).',
       '<b>Systems Manager</b> = operate servers at scale (patch, run commands, Session Manager, Parameter Store). <b>Compute Optimizer</b> = right-sizing recommendations. <b>Service Quotas</b>, <b>License Manager</b>, <b>Service Catalog</b> (approved products).',
       'Infrastructure as code: <b>CloudFormation</b> (templates), <b>CDK</b> (code). Access: <b>Management Console</b>, <b>CLI</b>, <b>SDKs</b>.',
+      '<b>Tags</b> (key/value labels) + <b>Resource Groups</b> group resources by tag; <b>Tag Editor</b> adds tags in bulk across services and Regions.',
       'Developer tools: <b>CodeBuild</b> (build/test), <b>CodePipeline</b> (CI/CD), <b>CodeDeploy</b>, <b>X-Ray</b> (trace requests through an app).'],
     traps: ['Performance metrics and alarms → CloudWatch. Audit trail → CloudTrail.', 'Recreate the same environment repeatedly → CloudFormation.', 'Health Dashboard shows AWS-side issues; CloudWatch shows your resources.'],
     links: [['IaC Explorer', EX('IaC-Explorer')], ['CI/CD Explorer', EX('CICD-Explorer')], ...fg('cloudwatch health trustedadvisor ssm computeoptimizer servicequotas licensemanager servicecatalog cloudformation cdk cli console codebuild codepipeline codedeploy xray')],
@@ -196,6 +210,16 @@
     ['Lambda limit', 'Max 15 minutes per run.']
   ];
 
+  const RETIRED = [
+    ['Amazon Elastic Transcoder', 'Shut down 13 Nov 2025 → AWS Elemental MediaConvert.'],
+    ['Amazon Pinpoint', 'Support ended 30 Oct 2026. SMS/push/voice live on as AWS End User Messaging; email → SES.'],
+    ['Amazon CodeGuru Reviewer', 'Closed to new customers 7 Nov 2025 (Profiler continues). Code review → Amazon Q Developer, Inspector.'],
+    ['S3 Glacier (vault service) / Vault Lock', 'The old vault-based Glacier service closed to new customers Nov 2025. The S3 Glacier <i>storage classes</i> are still current; use S3 Object Lock.'],
+    ['Application Discovery Service', 'Closed to new customers Nov 2025, but still listed in the CLF-C02 guide. Know what it does.'],
+    ['Amazon Sumerian · AWS CodeStar · AWS OpsWorks · AWS Cloud9 (new accounts)', 'Retired or closed to new customers 2023–2024. Older notes still teach them.'],
+    ['Renamed', 'CloudWatch Events → EventBridge · Personal Health Dashboard → AWS Health Dashboard · "CMK" → KMS key · Fault Injection Simulator → Fault Injection Service · Developer/Business support → Business Support+ (see 17).']
+  ];
+
   const LABS = [
     { n: 'L1', t: 'Secure your new AWS account (do this first)', min: 25, cost: 'Free',
       steps: ['Create the account and choose the <b>Free plan</b> if offered.', 'Turn on <b>MFA for the root user</b> (authenticator app).', 'In <b>Billing → Budgets</b>, create a monthly cost budget of $1 with an email alert at 80% and 100%.', 'Create an admin identity for daily work (IAM Identity Center user, or an IAM user in an Admins group) and enable MFA on it.', 'Sign out of root. From now on, use only the admin identity.'],
@@ -223,7 +247,7 @@
     ['VPC', 'Your isolated private network in AWS.'], ['Subnet', 'Range of IPs in one AZ; public or private.'], ['Internet Gateway', 'Lets a VPC talk to the internet.'], ['NAT gateway', 'Lets private subnets reach out to the internet, not the reverse.'], ['Security group', 'Stateful allow-only firewall on an instance.'], ['Network ACL', 'Stateless allow/deny firewall on a subnet.'], ['CDN', 'Content delivery network (CloudFront).'], ['DNS', 'Turns names into IP addresses (Route 53).'],
     ['Decoupling', 'Parts talk through queues/events so one failure doesn\'t break all.'], ['ETL', 'Extract, transform, load data (Glue).'],
     ['On-Demand / Spot / Savings Plan / RI', 'No commitment / spare capacity cheap but interruptible / 1–3 year commitment discounts.'], ['Consolidated billing', 'One bill for all accounts in an Organization, with combined discounts.'], ['Cost allocation tag', 'Label to split costs by project/team.'], ['TCO', 'Total cost of ownership (cloud vs on-premises).'], ['TAM', 'Technical Account Manager (Enterprise support).'],
-    ['RTO / RPO', 'How long you can be down / how much data you can lose.'], ['7 Rs', 'Migration strategies: retire, retain, relocate, rehost, replatform, repurchase, refactor.'], ['CAF', 'Cloud Adoption Framework: 6 perspectives, Envision → Align → Launch → Scale.'], ['Well-Architected', '6 pillars to review a workload.'], ['IaC', 'Infrastructure as code (CloudFormation, CDK).']
+    ['RTO / RPO', 'How long you can be down / how much data you can lose.'], ['7 Rs', 'Migration strategies: retire, retain, relocate, rehost, replatform, repurchase, refactor.'], ['CAF', 'Cloud Adoption Framework: 6 perspectives, Envision → Align → Launch → Scale.'], ['Well-Architected', '6 pillars to review a workload.'], ['IaC', 'Infrastructure as code (CloudFormation, CDK).'], ['Agility', 'Getting new resources in minutes, so you can experiment fast.'], ['Measured service', 'Usage is metered; you pay for what you use.'], ['Multi-tenancy', 'Many customers share the same hardware, isolated from each other.'], ['Credential Report', 'Account-wide list of IAM users and the status of their credentials.'], ['Access Advisor', 'Shows a user\'s permitted services and when each was last used.'], ['Elastic IP', 'Fixed public IPv4 address you keep until you release it.'], ['Penetration test', 'Authorized simulated attack on your own resources.'], ['Chaos engineering', 'Breaking things on purpose to prove resilience (FIS).']
   ];
 
   const SHORT = ['Concepts', 'Global infra', 'CAF & migration', 'Well-Architected', 'Shared resp.', 'IAM', 'Security svcs', 'Compliance', 'Compute', 'Storage', 'Databases', 'Networking', 'Integration', 'AI/ML & more', 'Mgmt & dev', 'Pricing', 'Support', 'Exam day'];
@@ -246,7 +270,7 @@
         <h1>01 → 18: one path to pass on the first try</h1>
         <p class="mute">Eighteen numbered modules in exam-guide order. Each has what you must know, the traps the exam sets, links into your Field Guide, City Map and Explorer courses, and an "I can…" checklist. Tick every box, do the four labs, then score 80%+ twice in the simulator.</p>
         <div style="display:flex;gap:14px;align-items:center;margin-top:12px"><div class="bar" style="flex:1"><i style="width:${pct}%"></i></div><b>${doneCount()}/${allChecks} · ${pct}%</b></div>
-        <div class="path" style="margin-top:14px">${M.map(m => `<a href="#m${m.n}" style="text-decoration:none"><span class="${mDone(m) ? 'done' : ''}">${m.n} ${SHORT[+m.n - 1]}</span></a>`).join('')}<a href="#labs" style="text-decoration:none"><span>LABS</span></a><a href="#mistakes" style="text-decoration:none"><span>MISTAKES</span></a><a href="#glossary" style="text-decoration:none"><span>GLOSSARY</span></a></div>
+        <div class="path" style="margin-top:14px">${M.map(m => `<a href="#m${m.n}" style="text-decoration:none"><span class="${mDone(m) ? 'done' : ''}">${m.n} ${SHORT[+m.n - 1]}</span></a>`).join('')}<a href="#labs" style="text-decoration:none"><span>LABS</span></a><a href="#mistakes" style="text-decoration:none"><span>MISTAKES</span></a><a href="#retired" style="text-decoration:none"><span>RETIRED</span></a><a href="#glossary" style="text-decoration:none"><span>GLOSSARY</span></a></div>
       </section>
       ${M.map(m => `
       <section class="card mod" id="m${m.n}" style="margin-top:14px">
@@ -260,6 +284,9 @@
       </section>`).join('')}
       <h2 id="mistakes">THE 20 MOST COMMON CCP MISTAKES</h2>
       <div class="grid g3">${MISTAKES.map(([a, b], i) => `<div class="card"><b style="color:var(--red)">${String(i + 1).padStart(2, '0')} · ${a}</b><div class="mute" style="margin-top:4px">${b}</div></div>`).join('')}</div>
+      <h2 id="retired">RETIRED OR RENAMED: DON'T OVER-STUDY</h2>
+      <p class="mute">Many free notes were written in 2022–2023. If a question shows one of these, answer from what the service did. Don't spend study time on it.</p>
+      <div class="card"><table class="hist">${RETIRED.map(([a, b]) => `<tr><td style="width:34%"><b>${a}</b></td><td>${b}</td></tr>`).join('')}</table></div>
       <h2 id="labs">HANDS-ON LABS (FREE-TIER SAFE)</h2>
       <p class="mute">Do L1 before anything else. Always do the clean-up step. A Budget alert warns you, but it does not stop charges.</p>
       <div class="grid g2">${LABS.map(l => `<div class="card"><div style="display:flex;gap:10px;align-items:center"><span class="num">${l.n}</span><h3 style="margin:0">${l.t}</h3></div>
@@ -275,10 +302,11 @@
         <li>Pack: valid government photo ID (name matches your AWS Certification account), confirmation email, directions to the test center.</li>
         <li>Sleep. Arrive 30 minutes early.</li></ol>
         <p class="mute" style="font-size:11px">If you miss more than 2 items in any module checklist the week before, do a 20-question domain practice for that domain before your next full exam.</p></div>
-      <p class="mute" style="font-size:11px;margin-top:20px">Numbered-path format inspired by <a href="https://github.com/Thiago-code-lab/aws-certified-cloud-practitioner-brasil" target="_blank" rel="noopener">Thiago-code-lab/aws-certified-cloud-practitioner-brasil</a> (MIT). All content written for this hub. Check the <a href="https://aws.amazon.com/certification/certified-cloud-practitioner/" target="_blank" rel="noopener">official exam page</a> for the current guide.</p>`;
+      <p class="mute" style="font-size:11px;margin-top:20px">Numbered-path format inspired by <a href="https://github.com/Thiago-code-lab/aws-certified-cloud-practitioner-brasil" target="_blank" rel="noopener">Thiago-code-lab/aws-certified-cloud-practitioner-brasil</a> (MIT), cross-checked against <a href="https://github.com/kananinirav/AWS-Certified-Cloud-Practitioner-Notes" target="_blank" rel="noopener">kananinirav/AWS-Certified-Cloud-Practitioner-Notes</a> (MIT). All content written for this hub. Check the <a href="https://aws.amazon.com/certification/certified-cloud-practitioner/" target="_blank" rel="noopener">official exam page</a> for the current guide.</p>`;
     app.querySelectorAll('input[type=checkbox]').forEach(cb => cb.onchange = () => { st[cb.dataset.k] = cb.checked; save(); const y = window.scrollY; render(); window.scrollTo(0, y); });
     const gq = app.querySelector('#gq'); gq.oninput = () => { const v = gq.value.toLowerCase(); app.querySelectorAll('#gt tr').forEach(tr => tr.style.display = tr.textContent.toLowerCase().includes(v) ? '' : 'none'); };
   }
+  try { localStorage.setItem('rmc-ccp-total', String(allChecks)); } catch (e) {}
   render();
   if (location.hash) { const el = document.querySelector(location.hash); if (el) el.scrollIntoView(); }
 })();
