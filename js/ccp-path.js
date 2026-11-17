@@ -1,5 +1,4 @@
-/* CCP Study Path: 18 numbered modules in exam order, labs and a glossary.
-   Numbered-path idea inspired by Thiago-code-lab/aws-certified-cloud-practitioner-brasil (MIT). Content written for this hub. */
+/* CCP Study Path: 18 numbered modules in exam order, labs and a glossary. */
 (function () {
   const FG = 'https://rmctech-ai.github.io/aws-city-map/field-guide/#';
   const CITY = 'https://rmctech-ai.github.io/aws-city-map/';
@@ -302,7 +301,7 @@
         <li>Pack: valid government photo ID (name matches your AWS Certification account), confirmation email, directions to the test center.</li>
         <li>Sleep. Arrive 30 minutes early.</li></ol>
         <p class="mute" style="font-size:11px">If you miss more than 2 items in any module checklist the week before, do a 20-question domain practice for that domain before your next full exam.</p></div>
-      <p class="mute" style="font-size:11px;margin-top:20px">Numbered-path format inspired by <a href="https://github.com/Thiago-code-lab/aws-certified-cloud-practitioner-brasil" target="_blank" rel="noopener">Thiago-code-lab/aws-certified-cloud-practitioner-brasil</a> (MIT), cross-checked against <a href="https://github.com/kananinirav/AWS-Certified-Cloud-Practitioner-Notes" target="_blank" rel="noopener">kananinirav/AWS-Certified-Cloud-Practitioner-Notes</a> (MIT). All content written for this hub. Check the <a href="https://aws.amazon.com/certification/certified-cloud-practitioner/" target="_blank" rel="noopener">official exam page</a> for the current guide.</p>`;
+      <p class="mute" style="font-size:11px;margin-top:20px">Check the <a href="https://aws.amazon.com/certification/certified-cloud-practitioner/" target="_blank" rel="noopener">official exam page</a> for the current exam guide.</p>`;
     app.querySelectorAll('input[type=checkbox]').forEach(cb => cb.onchange = () => { st[cb.dataset.k] = cb.checked; save(); const y = window.scrollY; render(); window.scrollTo(0, y); });
     const gq = app.querySelector('#gq'); gq.oninput = () => { const v = gq.value.toLowerCase(); app.querySelectorAll('#gt tr').forEach(tr => tr.style.display = tr.textContent.toLowerCase().includes(v) ? '' : 'none'); };
   }
