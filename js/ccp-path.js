@@ -157,7 +157,7 @@
       '<b>Tags</b> (key/value labels) + <b>Resource Groups</b> group resources by tag; <b>Tag Editor</b> adds tags in bulk across services and Regions.',
       'Developer tools: <b>CodeBuild</b> (build/test), <b>CodePipeline</b> (CI/CD), <b>X-Ray</b> (trace requests through an app).'],
     traps: ['Performance metrics and alarms → CloudWatch. Audit trail → CloudTrail.', 'Recreate the same environment repeatedly → CloudFormation.', 'Health Dashboard shows AWS-side issues; CloudWatch shows your resources.'],
-    links: [['IaC Explorer', EX('IaC-Explorer')], ['CI/CD Explorer', EX('CICD-Explorer')], ...fg('cloudwatch health trustedadvisor ssm computeoptimizer servicequotas licensemanager servicecatalog cloudformation cdk cli console codebuild codepipeline codedeploy xray')],
+    links: [['IaC Explorer', EX('IaC-Explorer')], ['CI/CD Explorer', EX('CICD-Explorer')], ...fg('cloudwatch health trustedadvisor ssm computeoptimizer servicequotas licensemanager servicecatalog cloudformation cdk cli console codebuild codepipeline xray')],
     checks: ['I know CloudWatch vs CloudTrail vs Config', 'I know the Trusted Advisor check categories', 'I know what CloudFormation and Systems Manager do'] },
 
   { n: '16', t: 'Pricing & Billing', d: 'billing', min: 40,
